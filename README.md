@@ -110,6 +110,7 @@ Calendly, lemlist, Crisp, Aikido…). Bibliothèque complète, recettes et grill
 - Ne jamais animer l'espacement des lettres : le rendu image par image fait trembler le texte.
 - Un fondu entre deux séquences claires passe par le gris si rien n'est posé dessous : d'où le fond papier.
 - Une séquence prolongée sous l'iris doit prolonger tout ce qu'elle contient, sinon l'image devient noire.
+- Une coupe franche ne doit jamais tomber sur une image vide : la séquence qui arrive est visible dès sa première image.
 - Un dossier de séquence au-delà de 48 Ko bloque la fabrication : 1 à 3 recettes par séquence.
 - La même mise en page pendant 10 s paraît lente, même si le contenu change : une image différente toutes les 2 à 3 s.
 - Toujours contrôler le vrai rendu, pas seulement l'aperçu.

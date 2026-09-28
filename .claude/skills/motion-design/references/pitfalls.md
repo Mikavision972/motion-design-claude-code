@@ -43,6 +43,14 @@ Found while making the example films with this exact stack (HyperFrames 0.8.82, 
   frame root lives longer, its clips do not).
 - **Two worlds of ground = grey crossfades.** The root is dark, so a crossfade between two light frames passes through
   grey. The paper bed of `assemble.sh` lies under the whole light world.
+- **A hard cut must never land on an empty frame.** If the incoming frame fades its content in from opacity 0 at t=0,
+  its first frame is just the dark ground and reads as a black flash at the cut (`contact-sheets.sh` flags it as a
+  one-frame black). The incoming frame is visible from its first frame (start at opacity 0.7, not 0).
+- **The iris ring must be visible at once.** Tween its radius over the whole iris but its opacity 0 to 1 in 0.08 s,
+  otherwise the first quarter of the iris is a plain black disc.
+- **A silent pivot needs the music out of the way.** When the pivot is a silence (a lone caret in the dark), duck the
+  music by about 85 % for that second in `build-audio.sh` (volume expression with `clip()`), then let it come back
+  with the light.
 - **`index.html` is rebuilt from scratch** by the assembler: never edit it by hand, put every orchestrator change in
   `assemble.sh`.
 - **A frame marked `animated` without its HTML file** stops the assembler. `assemble.sh` marks a frame animated only
