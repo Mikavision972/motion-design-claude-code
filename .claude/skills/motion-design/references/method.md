@@ -29,7 +29,9 @@ Rules for every script:
 ```bash
 npx hyperframes init <project> --non-interactive --example=blank
 cp .claude/skills/motion-design/templates/{frame.md,STORYBOARD.md,assemble.sh,build-audio.sh} <project>/
-mkdir -p <project>/assets/audio <project>/assets/fonts <project>/assets/icons <project>/compositions/frames
+cp templates/DIRECTIONS-TEMPLATE.md <project>/DIRECTIONS.md
+mkdir -p <project>/assets/audio <project>/assets/fonts <project>/assets/icons <project>/assets/img \
+  <project>/compositions/frames <project>/styleframes
 echo '[]' > <project>/assets/audio/sfx-events.json
 ```
 
@@ -92,36 +94,102 @@ python3 .claude/skills/motion-design/scripts/onsets.py <project>/assets/audio/vo
 
 `--window` prints the cues relative to the frame start, in the storyboard format (`word@seconds`).
 
-## 5. Frame spec `frame.md`
+## 5. Three directions, then the frame spec `frame.md` (user gate)
 
-Fill `<project>/frame.md` from the brand (landing page colors, logo, existing fonts). Colors are **roles**: canvas and
-paper grounds, ink on dark, ink-dark on light, ONE accent with its light, deep and glow shades. Keep the component list
-and the negative list; describe the product-specific components (the product mock, the persona, the tools shown).
+Read `patterns/STORYBOARD-CRAFT.md` first (the 10 laws, the numbers of the 6 reference films, the format, the grid),
+then `patterns/PATTERNS.md` (what to show: hook, pain, pivot, proof, end).
+
+**Three directions.** Fill `<project>/DIRECTIONS.md` (from `templates/DIRECTIONS-TEMPLATE.md`, filled example in
+`examples/C-le-devis-v7a/DIRECTIONS.md`): the global word timings from `onsets.json`, then three truly different
+directions for the same voice. Each one has:
+
+- a **concept**: the place the film happens in (one world the camera travels through: the quote itself, two
+  conversations side by side, a timeline), and what changes between the dark world of the pain and the light world of
+  the solution;
+- the **thread of bridge objects**: for each idea of the voice, the object that survives and takes another role
+  (the price falls into its cell, the cell grows into the phone, the quote shrinks into a notification), the 1 or 2
+  signature mechanisms repeated 4 to 8 times, the rhyme of the ending;
+- **three styleframes** (A1 to A3, B1 to B3, C1 to C3), each with its exact time in the voice: a frozen image of the
+  future film at final quality, with the motion suggested in the image (motion blur, depth of field, an element that
+  arrives too big and blurred), three depth levels, the real interfaces.
+
+Build each styleframe as a standalone 1920x1080 HTML page, `<project>/styleframes/<name>.html` (fonts and images
+through `../assets/...`), one sub-agent per direction if you want, then render them:
+
+```bash
+python3 -m pip install playwright && python3 -m playwright install chromium   # once
+python3 .claude/skills/motion-design/scripts/render-styleframes.py <project>          # all
+python3 .claude/skills/motion-design/scripts/render-styleframes.py <project> A2 B1    # only these
+```
+
+Look at every PNG yourself first (`<project>/styleframes/png/`), fix what does not match the description, then show
+the 9 images to the user, direction by direction, and wait for the choice (a direction, often with a borrowing from
+another one). Fixing an image costs ten times less than fixing a video.
+
+**Real interfaces.** A website is a real screenshot (ideally the user's), a chat is the real app, a phone is the
+current model, the AI is the real Claude window. Ask the user for a recent screenshot of each app shown: from memory
+you draw last year's interface. Keep them uncluttered: the whole device, small, only the messages that tell the story.
+A screenshot with real contacts is a reference for you, it never goes into the film.
+
+**Frame spec.** Fill `<project>/frame.md` for the chosen direction, from the brand (landing page colors, logo,
+existing fonts). Colors are **roles**: canvas and paper grounds, ink on dark, ink-dark on light, ONE accent with its
+light, deep and glow shades (one color per role, never two for the same role). Keep the component list and the
+negative list; describe the world (its size, the coordinates of every station, its states from frame to frame), the
+recurring objects, the camera (state `cam(x, y, scale, rx, rz)`, depth of field, the handoff rule) and the real
+interfaces. When the world is complex, write its code once in `<project>/reference/<world>.html`, runnable in a browser
+(a `demo({...})` function that sets any state): every frame copies its CSS, template and camera kit verbatim, so the
+world looks the same across every seam. Example: `examples/C-le-devis-v7a/frame.md` and `reference/devis-decor.html`.
 Check: `grep -n "{{" <project>/frame.md` prints nothing.
 
-## 6. Storyboard `STORYBOARD.md` (user gate)
+## 6. Storyboard `STORYBOARD.md`, sequence by sequence (user gate)
 
-Cut the voice into frames of 3 to 7 s, one idea each, boundaries in the silences. For each frame: the exact voiceover,
-frame-local word cues (from `--window`), a blueprint from `.claude/skills/hyperframes-animation/blueprints-index.md`,
-1 to 3 motion rules from `.claude/skills/hyperframes-animation/rules-index.md`, the world (dark or light), and Scene
-lines that change the composition **every 2 to 3 s** (full text, close-up on a detail, glass card, diagram, giant
-number: vary the framing, the text position and the object). Name the one pill of each sentence and the 2 to 5 giant
-words. Run the control grid of `patterns/PATTERNS.md` on the storyboard before showing it.
+Format and filled example: `templates/STORYBOARD-TEMPLATE.md` (repository root); complete example:
+`examples/C-le-devis-v7a/STORYBOARD.md`. Write, in this order:
 
-Timing check (the agent's mental math is not reliable, compute it):
+1. **The film header** in "Video direction": the world (acts, stations with coordinates, textured grounds), the colors
+   of each role, the 1 or 2 signatures with their dated occurrences, the text registers (one motion each), the rhymes,
+   the camera score (global times), the voice silences over 0.4 s (each one is a shot with its silent action), the hard
+   cuts with their reason (narrative voice: 0 to 4), the rhythm per act (the pain faster than the solution) and the
+   sound effects on their gestures.
+2. **One frame per idea of the voice**, 3 to 6 s, boundaries in the silences: exact voiceover, frame-local word cues
+   (`onsets.py --window`), one blueprint from `.claude/skills/hyperframes-animation/blueprints-index.md`, 1 to 3 motion
+   rules from `.claude/skills/hyperframes-animation/rules-index.md`, the world (dark or light), `handoff_in` and
+   `handoff_out`.
+3. **One block per shot** (`Scene k (in à out s)`): screen text with its [pill: ...] and [giant: ...], starting image,
+   steps about every 0.5 s (never more than 1 s without an event, 0.3 s in the first 3 s of the film), camera track
+   (drift in u/s or %/s, dated moves with their target), layers and depth (blurred foreground cut by the frame edge,
+   sharp subject, background), bridge object and its new role (or the exit vector reused at the entry), sound, key
+   image.
+4. **The camera handoff**: every seam falls at the top of the blur of a camera move, and the `handoff_out` of frame N
+   (camera state, blur, world state, objects on screen, light, text) is copied word for word into the `handoff_in` of
+   frame N+1. Every frame uses `transition_in: cut`: the continuity is in the image, not in an effect.
+
+Then pass the 15-point grid of `patterns/STORYBOARD-CRAFT.md` § 5 and the control grid of `patterns/PATTERNS.md`, and
+write the verdicts in `<project>/STORYBOARD-CHECK.md` (held, held after fix, not held with its reason; example:
+`examples/C-le-devis-v7a/STORYBOARD-CHECK.md`). Fix the storyboard, not the verdict.
+
+Timing and handoff checks (the agent's mental math is not reliable, compute it):
 
 ```bash
 python3 - <<'EOF'
 import re; s = open("<project>/STORYBOARD.md").read()
 d = [float(x) for x in re.findall(r"(?m)^- duration: ([0-9.]+)s", s)]
 print(len(d), "frames, sum", round(sum(d), 2), "s")
+out = re.findall(r"(?m)^- handoff_out: (.*)$", s); inn = re.findall(r"(?m)^- handoff_in: (.*)$", s)
+strip = lambda h: re.sub(r"^à [0-9.]+ : ", "", h.strip())
+t = 0
+for i in range(len(d) - 1):
+    t += d[i]
+    same = strip(out[i]) == strip(inn[i + 1])
+    print(f"seam {i + 1}>{i + 2} at {t:.2f}:", "same" if same else "DIFFERENT (only for a wanted hard cut)")
 EOF
 ```
 
-The sum must equal `TOTAL`. Show the user the frame list (title, duration, what we see) and wait for approval
-(autonomous mode: post it as a heads-up and continue).
+The sum must equal `TOTAL`; every seam prints `same` except the hard cuts written in the header. Show the user the
+frame list (title, duration, what we see, the key image of each shot) and wait for approval (autonomous mode: post it
+as a heads-up and continue).
 
-## 7. Frame packets
+## 7. One prompt per sequence: the frame packets
 
 ```bash
 node .claude/skills/product-launch-video/scripts/frame-packets.mjs --project <project> --storyboard <project>/STORYBOARD.md
@@ -129,12 +197,25 @@ node .claude/skills/product-launch-video/scripts/frame-packets.mjs --project <pr
 
 One packet per frame in `<project>/.hyperframes/frame-packets/` plus `_role.md` (the worker contract). Every packet
 must stay under 48 KB: if one fails, cut a rule from that frame (every rule id mentioned in the frame text is inlined).
+A packet is the whole world of its worker: its storyboard block with the handoffs, the blueprint and the rules. What
+the worker must know and is not in the packet goes in the dispatch context (`worker-dispatch.md`).
 
 ## 8. One sub-agent per frame
 
 See `worker-dispatch.md`. Build **frame 1 alone first** as the pilot: snapshot it, show it, lock the look (fixing one
-frame costs ten times less than fixing nine). Then dispatch every other frame in parallel, one worker each. Wait for the
-files on disk, not for the notifications.
+frame costs ten times less than fixing nine). Then dispatch the frames that introduce a recurring object, then every
+other frame in parallel, one worker each. Wait for the files on disk, not for the notifications.
+
+Pitfalls met on `examples/C-le-devis-v7a/` (the dispatch template of SKILL.md carries them to every worker):
+
+- **An inner `<template id>` beside the frame root**: the engine only embeds the root, `getElementById` returns null
+  and the whole frame stays black. The lint does not see it, `npx hyperframes validate` does ("Cannot read properties
+  of null (reading 'content')"). The inner template lives INSIDE the root element.
+- **`style.visibility = "visible"` in a frame**: a child forced visible stays on screen when its frame is hidden, and
+  covers the whole film (frame 09 showed from 0 to 33 s). Always `"inherit"`.
+- **Session cuts** (two in one afternoon): workers stop mid-write. Ask each worker to write a complete first version
+  early, then refine it. Before resuming, run `check-frames.py` and re-dispatch only the frames that are MISSING or
+  BROKEN (9 frames out of 10 were kept this way).
 
 ## 9. Assembly and orchestrator layer
 
@@ -146,7 +227,14 @@ bash <project>/assemble.sh
 ```
 
 It rebuilds `index.html` with HeyGen's assembler and transition injector, then adds the orchestrator layer
-(`orchestrator-layer.md`) and runs the lint. Re-run it after every change to a frame or to the storyboard.
+(`orchestrator-layer.md`) and runs the lint. Re-run it after every change to a frame or to the storyboard. Then:
+
+```bash
+cd <project> && npx hyperframes validate
+```
+
+`validate` runs the composition in headless Chrome and reports what the lint cannot see (a JavaScript error, a
+missing asset): a frame that throws renders black.
 
 ## 10. Audio mix
 
@@ -180,8 +268,15 @@ cd <project> && npx hyperframes check
 cd <project> && npx hyperframes snapshot --at <frame midpoints, and each cut -0.1 and +0.2, comma-separated>
 ```
 
-Open `<project>/snapshots/contact-sheet.jpg`. Midpoints: layout failures. Around every cut: a continuing element must
-keep its position, scale, opacity and direction.
+Open `<project>/snapshots/contact-sheet.jpg`. Midpoints: layout failures. Around every seam: a continuing element must
+keep its position, scale, opacity, blur and direction, the camera must be in the same move, nothing is doubled and
+nothing is missing. Seam times (the cumulative durations):
+
+```bash
+python3 -c "import re,itertools; d=[float(x) for x in re.findall(r'(?m)^- duration: ([0-9.]+)s', open('<project>/STORYBOARD.md').read())]; print(' '.join(f'{t:.2f}' for t in itertools.accumulate(d[:-1])))"
+```
+
+For each seam time T, snapshot `T-0.033,T,T+0.033` (the last image of frame N, the first of frame N+1, the next one).
 
 ## 12. Render and control of the real video
 
@@ -191,9 +286,19 @@ bash .claude/skills/motion-design/scripts/contact-sheets.sh <project>/renders/vi
 ```
 
 `contact-sheets.sh` reports black segments (exit code 2 when there is one) and writes 4 images/s sheets (4 x 6, 6 s
-per sheet, timestamped) in `<project>/renders/contact-sheets/`. Open every sheet. Run the control grid of
-`patterns/PATTERNS.md` on the render, fix the frame concerned (the cheapest edit in its HTML), re-assemble, re-render.
-For a stray element whose origin is unclear, hide the frames one by one in `index.html` until it disappears.
+per sheet, timestamped) in `<project>/renders/contact-sheets/` (`FPS=2` for exactly one image every 0.5 s). Open every
+sheet. Then check every seam on the real file, image by image, one strip of 6 images (3 before, 3 after) per seam:
+
+```bash
+for T in <seam times>; do
+  ffmpeg -v error -y -ss "$(python3 -c "print(max(0, $T - 0.1))")" -i <project>/renders/video.mp4 \
+    -vf "scale=480:-1,tile=6x1" -frames:v 1 "<project>/renders/contact-sheets/seam-$T.jpg"
+done
+```
+
+Run the control grid of `patterns/PATTERNS.md` on the render, fix the frame concerned (the cheapest edit in its HTML),
+re-assemble, re-render. For a stray element whose origin is unclear, hide the frames one by one in `index.html` until
+it disappears. Never report the film as done before this control.
 
 For a waveform drawn from the real voice inside a frame:
 

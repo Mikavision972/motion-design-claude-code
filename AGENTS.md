@@ -40,4 +40,7 @@ for other kinds of video.
 
 - Method: `.claude/skills/motion-design/SKILL.md` and its `references/`
 - Patterns and control grid: `patterns/PATTERNS.md`
+- Storyboard grammar (10 laws, format, 15-point grid): `patterns/STORYBOARD-CRAFT.md`
+- Templates for the storyboard step: `templates/DIRECTIONS-TEMPLATE.md`, `templates/STORYBOARD-TEMPLATE.md`
+- A complete storyboard made with this method: `examples/C-le-devis-v7a/`
 - Third-party notices: `THIRD_PARTY_NOTICES.md`

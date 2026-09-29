@@ -23,8 +23,11 @@ Frame-specific lines to add to the dispatch context when they apply:
   floods the light from that exact point at <LEAK_AT + 0.03 - frame start> s."
 - **Frame under the iris**: "The orchestrator keeps this frame mounted until <IRIS_AT + 0.80 - frame start> s: every
   internal clip and the ground must last until then. End on <object> at (IRIS_X, IRIS_Y)."
-- **Handoffs**: when an element continues across a cut, the packet carries `handoff_in` / `handoff_out`; they are
-  binding for both workers.
+- **Handoffs**: every frame of the storyboard carries `handoff_in` / `handoff_out` (camera state, blur, world state,
+  objects, light, text at the seam); they are binding for both workers: the first image of the frame is exactly its
+  `handoff_in`, the last one exactly its `handoff_out`.
+- **Shared world**: when `frame.md` points to an executable reference (`reference/<world>.html`), add "Copy the CSS,
+  the template and the camera kit of reference/<world>.html verbatim (only `../assets/` becomes `assets/`)".
 - **Retry**: paste the lint or check findings that name the frame, verbatim.
 
 ## Pilot, then parallel
@@ -44,4 +47,7 @@ Frame-specific lines to add to the dispatch context when they apply:
 ## What workers must never do
 
 Run `npx hyperframes` (any command), edit `STORYBOARD.md`, `frame.md`, `index.html` or another frame, add `<audio>`,
-load a font or a script from the network, invent visible copy that the Scene lines do not quote.
+load a font or a script from the network, invent visible copy that the Scene lines do not quote, put an inner
+`<template id>` outside the root element of the frame, or set `style.visibility = "visible"` (always `"inherit"`).
+Every worker writes a complete first version of its file early, then refines it: a session cut must leave a usable
+file, not half of one.

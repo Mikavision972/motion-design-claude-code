@@ -2,11 +2,16 @@
 
 Des films de lancement façon agence (40 à 50 s, 16:9, voix off, texte qui arrive mot par mot sur la voix) faits avec
 Claude Code et HyperFrames, le moteur vidéo open source de HeyGen, sans savoir coder. Tu écris le script avec Claude,
-tu génères la voix, Claude construit le film image par image et le vérifie avant de te le rendre.
+tu génères la voix, tu choisis une direction de storyboard sur image, puis Claude construit le film séquence par
+séquence et le vérifie avant de te le rendre.
 
-Tout ce qu'il faut est dans ce dépôt : la méthode sous forme de skill Claude Code, les modèles de charte et de
-storyboard, les scripts de minutage et de contrôle, les patterns tirés de 56 films d'agence, et les skills officiels
-HeyGen, audités et figés.
+Tout ce qu'il faut est dans ce dépôt : la méthode sous forme de skill Claude Code, la grammaire de storyboard tirée de
+films d'agence décortiqués au dixième de seconde, les modèles de directions, de charte et de storyboard, les scripts de
+minutage et de contrôle, les patterns tirés de 56 films d'agence, des films d'exemple, et les skills officiels HeyGen,
+audités et figés.
+
+**Le guide pas à pas**, avec les 5 étapes, leurs prompts et les pièges :
+[le guide Notion](https://www.notion.so/3e9bd65124ec816e9c39f5c1b3cc8b67).
 
 **Pour qui** : fondateurs, indépendants, créateurs et marketeurs qui veulent une vidéo de lancement de qualité agence
 pour une landing page, LinkedIn ou YouTube, sans passer par une agence ni apprendre After Effects.
@@ -17,7 +22,8 @@ pour une landing page, LinkedIn ou YouTube, sans passer par une agence ni appren
   une dizaine de sous-agents, des instances de Claude qui travaillent en parallèle).
 - Node 22 ou plus récent (l'environnement qui fait tourner HyperFrames).
 - ffmpeg (l'outil qui découpe et assemble le son et la vidéo).
-- Python 3 avec le paquet `openai-whisper` (la transcription mot par mot, en local sur ta machine).
+- Python 3 avec le paquet `openai-whisper` (la transcription mot par mot, en local sur ta machine) et le paquet
+  `playwright` (le rendu des images de style en PNG, à l'étape du storyboard).
 - Un compte [ElevenLabs](https://elevenlabs.io) pour la voix (forfait payant obligatoire pour un usage commercial).
 
 Pas besoin de savoir coder : Claude installe, écrit et vérifie. Tu décides et tu valides.
@@ -32,7 +38,7 @@ Ouvre Claude Code et colle ce prompt :
 Installe le dépôt motion-design-claude-code sur ma machine. Fais tout toi-même avec tes outils, sans me demander d'ouvrir un terminal.
 
 1. Clone https://github.com/cblain100-prog/motion-design-claude-code dans ~/motion-design-claude-code (ou dans le dossier que je t'indique) et place-toi dedans.
-2. Vérifie les prérequis et dis-moi ce qui manque : Node 22 ou plus (node --version), ffmpeg et ffprobe, Python 3, le paquet openai-whisper (python3 -c "import whisper"). Si ffmpeg manque sur Mac, installe-le avec Homebrew. Si openai-whisper manque, installe-le avec python3 -m pip install -U openai-whisper (préviens-moi avant : le téléchargement est gros).
+2. Vérifie les prérequis et dis-moi ce qui manque : Node 22 ou plus (node --version), ffmpeg et ffprobe, Python 3, le paquet openai-whisper (python3 -c "import whisper"). Si ffmpeg manque sur Mac, installe-le avec Homebrew. Si openai-whisper manque, installe-le avec python3 -m pip install -U openai-whisper (préviens-moi avant : le téléchargement est gros). Si le paquet playwright manque (python3 -c "import playwright"), installe-le avec python3 -m pip install playwright puis python3 -m playwright install chromium.
 3. Lance npm ci (HyperFrames est figé en version 0.8.82 par le fichier package-lock.json).
 4. Crée le fichier .env vide à la racine avec cp .env.example .env. Il est voulu : ne le supprime jamais et n'y écris aucune clé.
 5. Préfixe chaque commande npx hyperframes par HYPERFRAMES_NO_TELEMETRY=1 DO_NOT_TRACK=1 HYPERFRAMES_SKIP_SKILLS=1 HYPERFRAMES_NO_UPDATE_CHECK=1, puis lance dans l'ordre : npx hyperframes telemetry disable, npx hyperframes doctor, npx hyperframes browser ensure.
@@ -48,74 +54,99 @@ les garde-fous se chargent. Puis demande par exemple :
 
 ---
 
-## La méthode, étape par étape
+## La méthode en 5 étapes
 
-Le skill `motion-design` déroule tout, dans cet ordre. Claude s'arrête pour ta validation après le script, après la
-voix, après le storyboard et après la première séquence.
+Les 5 étapes de la vidéo YouTube, avec leur prompt à copier (deux pour l'étape 4). Le guide pas à pas, avec les
+explications, les exemples et les pièges : **[le guide Notion](https://www.notion.so/3e9bd65124ec816e9c39f5c1b3cc8b67)**.
+Claude s'arrête pour ta validation après le script, après la voix, après le choix de la direction, après le storyboard
+et après la première séquence.
 
-1. **Le script, co-imaginé.** Claude te pose les quelques questions qui manquent, te propose 5 à 7 concepts en une ligne,
-   en écrit 2 ou 3 en entier (110 à 130 mots, soit 40 à 50 s de voix), et tu choisis puis corriges mot à mot. Règles :
-   le premier mot nomme la cible ou sa douleur, une phrase égale un plan, des chiffres réels uniquement, une seule
-   action à la fin.
-2. **La voix, ElevenLabs v3.** Claude prépare le texte à coller, avec les chiffres en toutes lettres et des balises
-   entre crochets (`[pause]`, `[long pause]`, `[sarcastic]`, `[sighs]`) que seul le modèle Eleven v3 sait lire. Tu
-   génères 3 ou 4 prises, tu gardes la meilleure et tu la déposes dans le projet.
-3. **Le minutage réel.** Whisper transcrit la voix mot par mot, puis `onsets.py` recale le début de chaque phrase sur
-   l'énergie réelle du son (tranches de 10 ms, silences de 120 ms minimum) : Whisper seul se décale de plusieurs
-   centaines de millisecondes, et un mot qui arrive en retard se voit. Les pauses se rallongent au montage, jamais en
-   régénérant la voix.
-4. **La charte `frame.md`.** Les couleurs par rôle (fond sombre pour le problème, fond clair pour la solution, une seule
-   couleur d'accent), les polices, les composants (la pastille qui se trace derrière le mot clé, le curseur, les cartes, le
-   personnage) et la liste de ce qui est interdit.
-5. **Le `STORYBOARD.md` minuté mot par mot.** Le film découpé en séquences de 3 à 7 s, chacune avec sa phrase exacte, le
-   moment de chaque mot, un plan type HeyGen, 1 à 3 recettes de mouvement, et **une image différente toutes les 2 à
-   3 s**. Tu valides la liste des séquences avant que la fabrication commence.
-6. **Les dossiers de séquence.** Un script de HeyGen prépare, pour chaque séquence, un dossier qui contient tout ce
-   qu'il faut pour la construire (son extrait de storyboard, le plan type, les recettes), limité à 48 Ko.
-7. **Un sous-agent par séquence.** Claude construit d'abord la séquence 1 seule et te la montre pour fixer le style,
-   puis lance un sous-agent par séquence restante, en parallèle. Chacun écrit un seul fichier HTML animé.
-8. **L'assemblage et la couche orchestrateur.** Les scripts de HeyGen assemblent les séquences et leurs transitions,
-   puis `assemble.sh` ajoute ce qu'aucune séquence ne peut faire seule : le fond papier sous tout le monde clair, le
-   flash de lumière qui fait passer du problème à la solution, l'iris qui ouvre la carte de fin, et le son.
-9. **Le mixage audio, en 4 options de musique.** `build-audio.sh` coupe la voix au milieu des silences (fondus de
-   5 ms). `analyze-music.py` lit chaque morceau comme un monteur (tempo, drops, montées, clair ou sombre) et dit à quel
-   moment le démarrer pour que son drop tombe sur le flash. `build-music-options.py` fabrique ensuite 3 ou 4 mixages
-   sur le même montage : musique coupée net sur le pivot avec un impact grave, drop calé sur le flash, musique qui
-   baisse sous la voix (compression déclenchée par la voix) et remonte dans les silences, fin en fondu, volume calibré
-   pour le web (-16 LUFS, l'unité du volume perçu). Il vérifie aussi que la musique n'écrase pas la voix au pivot. Morceaux en CC0 (domaine
-   public) uniquement, bruitages placés sur les événements à l'image (clic, pop, souffle).
-10. **Les contrôles.** Lint (la vérification automatique du code), `check` de HyperFrames, planches d'images autour de
-    chaque coupe, puis la grille de contrôle des patterns.
-11. **Le rendu, puis le contrôle du vrai fichier.** Rendu MP4, puis `contact-sheets.sh` cherche les images noires et
-    étale tout le film sur des planches de 4 images par seconde que Claude regarde une par une. Correction, nouveau
-    rendu, livraison. Les autres musiques se posent sur le même rendu en quelques secondes, sans refaire la vidéo.
-12. **Les variantes.** Quand tu demandes « encore mieux » ou « d'autres versions » : plusieurs directions sur la même
-    voix et le même minutage, pour que chaque musique aille avec chaque image. Une version polie (ce que tu as
-    pointé, plus un pic plus fort), une restylisation qui garde la chorégraphie (par exemple tout en sombre), une
-    direction neuve (par exemple vue du dessus d'un bureau avec de vrais objets). Les objets qui reviennent d'une
-    séquence à l'autre sont construits d'abord, puis recopiés tels quels. Après une coupure de session,
-    `check-frames.py` repère les fichiers à moitié écrits avant de relancer.
-13. **Le film sur ton site.** Encodage web (environ 6 Mo, démarrage immédiat), affiche, lecture muette automatique
-    quand le film arrive à l'écran, bouton son qui relance au début, respect du réglage « moins d'animations », et un
-    cadre couleur d'accent bien visible autour du film (sur un fond de même couleur que le film, sans cadre, c'est
-    noir sur noir). Composant React prêt à l'emploi : `.claude/skills/motion-design/templates/LaunchFilm.tsx`.
+### 1. Récupérer la bibliothèque de skills
 
-Détail complet pour l'agent : `.claude/skills/motion-design/SKILL.md` et son dossier `references/`.
+```
+Installe dans ce dossier les skills HyperFrames de HeyGen (github.com/heygen-com/hyperframes) et récupère la méthode de github.com/cblain100-prog/motion-design-claude-code. Audite d'abord ce que font les skills avant de les installer, et dis-moi ce qui touche à mes fichiers ou au réseau.
+```
+
+Deux bibliothèques : les skills officiels HyperFrames de HeyGen (Claude écrit chaque scène comme une page web,
+HyperFrames la filme image par image) et cette méthode. Un skill, c'est du code qui tourne sur ta machine : fais-le
+auditer avant, dans un dossier à part de tes autres projets. Ce dépôt contient déjà les skills HeyGen audités et figés
+(voir [Sécurité](#sécurité)) : le prompt d'installation ci-dessus fait tout en une fois.
+
+### 2. Créer le script
+
+```
+On imagine ensemble le script d'une vidéo animée de 40 secondes pour [ton offre]. Propose-moi 5 pistes vraiment différentes : le concept, la première phrase, la dernière phrase. On ne fabrique rien tant que je n'ai pas choisi.
+```
+
+Claude écrit en entier les pistes que tu gardes (110 à 130 mots, 40 à 50 s de voix) et tu corriges mot à mot. Les
+meilleures phrases viennent de tes appels clients, mot pour mot. Le premier mot nomme ta cible ou sa douleur, chaque
+phrase se lit à l'écran sans le son, une seule action à la fin.
+
+### 3. Créer la voix
+
+```
+Voici la voix. Relève le moment exact de chaque mot et range tout le minutage dans un seul fichier : chaque animation tombera sur un mot, jamais après.
+```
+
+La voix se fait sur ElevenLabs, modèle Eleven v3 (le seul qui lit les balises `[pause]`, `[sarcastic]`, `[sighs]`),
+chiffres en toutes lettres, 3 ou 4 essais : tu déposes le meilleur dans le projet. C'est l'horloge du film : Whisper
+transcrit mot par mot sur ta machine, `onsets.py` recale chaque début de phrase sur le vrai son (Whisper seul se décale
+de plusieurs centaines de millisecondes), et tout le minutage tient dans un seul fichier, `onsets.json`.
+
+### 4. Créer le storyboard et les prompts pour l'animation
+
+```
+Propose-moi 3 directions de storyboard vraiment différentes pour ce script, avec 3 images de style chacune (une image figée du futur film, en qualité finale). Applique la grammaire de STORYBOARD-CRAFT.md.
+```
+
+```
+Écris le storyboard complet de la direction A : une séquence de 3 à 6 secondes par idée, une étape toutes les 0,5 seconde, la caméra, l'objet qui fait le pont vers la séquence suivante, le bruitage. Puis découpe-le en un prompt par séquence.
+```
+
+Le cœur de la méthode. Claude applique [`patterns/STORYBOARD-CRAFT.md`](patterns/STORYBOARD-CRAFT.md), la grammaire tirée
+de six films d'agence décortiqués au dixième de seconde, propose trois directions avec trois images de style chacune
+([`templates/DIRECTIONS-TEMPLATE.md`](templates/DIRECTIONS-TEMPLATE.md)) et tu choisis sur image. Puis il écrit le
+storyboard séquence par séquence ([`templates/STORYBOARD-TEMPLATE.md`](templates/STORYBOARD-TEMPLATE.md)) : une caméra
+qui ne s'arrête jamais, un objet-pont à chaque transition, un passage de relais écrit à chaque couture, la grille de
+contrôle en 15 points, puis un prompt par séquence. Exemple complet : [`examples/C-le-devis-v7a/`](examples/C-le-devis-v7a/).
+
+### 5. Lancer l'animation, et vérifier
+
+```
+Lance un agent par séquence, en parallèle. Puis assemble, fais le rendu, et vérifie avant de me dire que c'est fini : les images noires, une planche contact toutes les 0,5 seconde, et les raccords entre séquences image par image.
+```
+
+Un sous-agent par séquence, en parallèle, après une première séquence que tu valides ; HyperFrames assemble et fait le
+rendu, et la musique se choisit à la fin, en 3 ou 4 options sur la même voix, sans refaire l'image. Rien n'est fini
+avant la vérification du vrai fichier (images noires, planche contact, raccords image par image) ; après une coupure de
+session, Claude relance seulement les séquences qui manquent.
+
+Ensuite, si tu veux : des variantes sur la même voix (`.claude/skills/motion-design/references/variants.md`) et le film
+sur ton site, lecture muette automatique et cadre de couleur (`references/landing-integration.md`, composant React
+`templates/LaunchFilm.tsx`). Détail complet pour l'agent, commande par commande : `.claude/skills/motion-design/SKILL.md`
+et son dossier `references/`.
 
 ## Les patterns, en résumé
 
 Tirés de l'analyse image par image de 56 films de lancement du portfolio de l'agence 1600.agency (Notion, Slack,
 Calendly, lemlist, Crisp, Aikido…). Bibliothèque complète, recettes et grille de contrôle :
-[`patterns/PATTERNS.md`](patterns/PATTERNS.md).
+[`patterns/PATTERNS.md`](patterns/PATTERNS.md). Comment écrire le storyboard au dixième de seconde (caméra,
+objets-ponts, profondeur, calage sur la voix, gabarit, grille en 15 points), d'après six de ces films refaits à
+l'envers : [`patterns/STORYBOARD-CRAFT.md`](patterns/STORYBOARD-CRAFT.md).
 
 - **Lisible sans le son** : une composition par phrase, texte petit et centré qui arrive mot par mot sur la voix.
 - **Le premier mot nomme la cible ou sa douleur**, et la première image est ce mot seul, jamais le logo.
-- **Une seule couleur d'accent**, un seul mot mis en valeur par phrase, un seul mécanisme (la pastille qui se trace).
+- **Une couleur d'accent par rôle** (le plus souvent une seule pour tout le film), un seul mot mis en valeur par phrase,
+  un seul mécanisme (la pastille qui se trace).
 - **Deux mondes** : un fond sombre pour la douleur, un fond clair pour la solution, avec un pivot entre les deux.
 - **La douleur montrée dans les outils de la cible** (Gmail, tableur, site), et son volume par un essaim d'objets.
 - **Des mots géants seulement aux pics**, des chiffres qui roulent, un produit montré par des gestes.
-- **Continu** : 0 à 4 coupes franches, tout le reste s'enchaîne par des objets qui traversent, des cercles, des zooms.
-- **Une carte de fin avec un seul bouton** qu'un curseur vient cliquer.
+- **Le rythme se compte en événements** : quelque chose de neuf toutes les 0,5 à 1 s, une caméra qui ne s'arrête
+  jamais, des éléments qui arrivent trop grands et flous puis se posent, trois niveaux de profondeur.
+- **Continu** : avec une voix narrative, 0 à 4 coupes franches et 0 à 2 fondus ; tout le reste passe par un objet qui
+  change de rôle (l'objet-pont) ou par la caméra.
+- **Une carte de fin avec un seul bouton** qu'un curseur vient cliquer après une hésitation, puis 2 à 3 s d'image qui
+  vit encore avant le noir.
 
 ## Les pièges connus
 
@@ -128,6 +159,16 @@ Calendly, lemlist, Crisp, Aikido…). Bibliothèque complète, recettes et grill
 - Une coupe franche ne doit jamais tomber sur une image vide : la séquence qui arrive est visible dès sa première image.
 - Un dossier de séquence au-delà de 48 Ko bloque la fabrication : 1 à 3 recettes par séquence.
 - La même mise en page pendant 10 s paraît lente, même si le contenu change : une image différente toutes les 2 à 3 s.
+- Assez de plans ne suffit pas : sans caméra qui bouge ni événement toutes les demi-secondes, le film fait encore
+  « vidéo d'IA ». D'où le storyboard écrit avant d'animer.
+- Deux agents, une couture : sans passage de relais écrit, l'image saute. La dernière image d'une séquence
+  (`handoff_out`) est recopiée mot pour mot comme première image de la suivante (`handoff_in`).
+- Un modèle HTML interne (`<template id>`) posé à côté du bloc racine d'une séquence : elle reste noire, et seul
+  `npx hyperframes validate` le signale. Il vit dans le bloc racine.
+- Jamais `style.visibility = "visible"` dans une séquence : l'élément s'affiche par-dessus tout le film. Toujours
+  `"inherit"`.
+- Une coupure de session coupe les agents en plein travail : relancer seulement les séquences manquantes ou cassées
+  (`check-frames.py`), et demander aux agents d'écrire tôt une première version complète.
 - Toujours contrôler le vrai rendu, pas seulement l'aperçu.
 
 Liste complète et corrections : `.claude/skills/motion-design/references/pitfalls.md`.
@@ -169,15 +210,17 @@ propres fichiers d'exemple).
 
 ## Exemples
 
-Trois films faits avec cette méthode le même jour, pour la landing page d'Entrepreneurs 2.0, sont dans `examples/` :
+Des films faits avec cette méthode pour la landing page d'Entrepreneurs 2.0 sont dans `examples/` (détail et marche à
+suivre pour refaire un rendu : [`examples/README.md`](examples/README.md)) :
 
 - `examples/le-devis/` : « Le devis » (43 s). La vidéo finale est dans le dossier (`le-devis.mp4`).
 - `examples/traduire/` : « Traduire » (50 s), la métaphore de la langue : le code, le traducteur, l'ordinateur qui parle français.
 - `examples/cette-video/` : « Cette vidéo » (45 s), le film qui parle de lui-même (un lecteur vidéo qui se contient à l'infini, un générique, la vraie onde de la voix).
+- `examples/C-le-devis-v7a/` : « Le devis est le décor » (43,2 s), le devis refait à partir d'un vrai storyboard, le film du début de la vidéo YouTube. Le devis devient le lieu du film, la caméra le parcourt ligne par ligne. On y trouve les trois directions proposées, la charte, le storyboard complet (10 séquences, 27 plans, passages de relais), la grille de contrôle passée point par point, le code exécutable du décor et le script de rendu des images de style.
 
-Chaque exemple contient sa charte `frame.md`, son `STORYBOARD.md` minuté mot par mot, ses séquences HTML, son `assemble.sh` et son `build-audio.sh`. Les voix, la musique, les bruitages et les polices ne sont pas inclus : pour refaire un rendu, dépose ta voix et suis `examples/README.md`.
+Les trois premiers contiennent leur charte `frame.md`, leur `STORYBOARD.md` minuté mot par mot, leurs séquences HTML, leur `assemble.sh` et leur `build-audio.sh` ; le quatrième montre l'étape 4 (directions, storyboard, grille de contrôle). Les voix, la musique, les bruitages et les polices ne sont pas inclus : pour refaire un rendu, dépose ta voix et suis `examples/README.md`.
 
-Le devis a ensuite été décliné en trois options sur la même voix, dans `examples/le-devis-options/` : « Poli » (la version en ligne sur le site, vidéo incluse : `poli/le-devis-poli.mp4`), « Nuit » (tout en sombre) et « Le bureau » (vue du dessus d'un bureau, vrais objets), avec les quatre musiques dans `poli/build-music-options.py`.
+Le devis a ensuite été décliné en trois options sur la même voix, dans `examples/le-devis-options/` : « Poli » (la première version mise en ligne sur le site, vidéo incluse : `poli/le-devis-poli.mp4`), « Nuit » (tout en sombre) et « Le bureau » (vue du dessus d'un bureau, vrais objets), avec les quatre musiques dans `poli/build-music-options.py`.
 
 ## Structure du dépôt
 
@@ -188,15 +231,17 @@ Le devis a ensuite été décliné en trois options sur la même voix, dans `exa
 - `package.json` et `package-lock.json` : HyperFrames 0.8.82 figé.
 - `.env.example` : à copier en `.env` (vide, c'est voulu).
 - `.claude/settings.json` : télémétrie coupée.
-- `.claude/skills/motion-design/` : le skill de la méthode (`SKILL.md`, `references/` dont `music.md`, `variants.md` et `landing-integration.md`, `templates/` dont `build-music-options.py` et `LaunchFilm.tsx`, `scripts/` dont `analyze-music.py` et `check-frames.py`).
+- `.claude/skills/motion-design/` : le skill de la méthode (`SKILL.md`, `references/` dont `music.md`, `variants.md` et `landing-integration.md`, `templates/` dont `STORYBOARD.md`, `build-music-options.py` et `LaunchFilm.tsx`, `scripts/` dont `onsets.py`, `render-styleframes.py`, `analyze-music.py` et `check-frames.py`).
 - `.claude/skills/product-launch-video/` et 9 autres skills officiels HeyGen, audités et figés, avec leur licence.
 - `patterns/PATTERNS.md` : les patterns des 56 films et la grille de contrôle.
-- `examples/` : les trois films d'exemple (charte, storyboard, séquences, scripts d'assemblage et de son), et `examples/le-devis-options/` : les trois options du devis et ses quatre musiques.
+- `patterns/STORYBOARD-CRAFT.md` : la grammaire de storyboard (10 lois, chiffres, recettes GSAP, format, grille en 15 points).
+- `templates/` : `DIRECTIONS-TEMPLATE.md` (les trois directions et leurs images de style) et `STORYBOARD-TEMPLATE.md` (l'en-tête du film et le bloc d'une séquence, avec un exemple rempli).
+- `examples/` : les trois films d'exemple (charte, storyboard, séquences, scripts d'assemblage et de son), `examples/le-devis-options/` : les trois options du devis et ses quatre musiques, et `examples/C-le-devis-v7a/` : le devis refait à partir d'un vrai storyboard.
 - `<ton-projet>/` : un dossier par film, créé par le skill.
 
 ## Crédits et licences
 
-- **Ce dépôt** (méthode, skill `motion-design`, modèles, scripts, patterns, documentation) : licence MIT, © 2026
+- **Ce dépôt** (méthode, skill `motion-design`, modèles, scripts, patterns, grammaire de storyboard, documentation) : licence MIT, © 2026
   Colin Blain. Voir `LICENSE`.
 - **Skills HyperFrames** : © HeyGen, Inc., licence Apache 2.0, source https://github.com/heygen-com/hyperframes,
   copie du commit audité avec les modifications listées dans `THIRD_PARTY_NOTICES.md`.

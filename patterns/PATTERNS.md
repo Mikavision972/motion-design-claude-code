@@ -8,7 +8,9 @@ vidéos appartiennent à leurs auteurs. Pour les voir, passe par le portfolio pu
 Les noms cités sont ceux des marques clientes ; ce dépôt n'est pas affilié à l'agence.
 
 À utiliser **avant d'écrire un storyboard** (choisir les patterns) et **après le premier rendu** (grille de contrôle en fin de
-fichier). Les recettes sont écrites pour HyperFrames (HTML + GSAP), mais valent pour n'importe quel outil.
+fichier). Les recettes sont écrites pour HyperFrames (HTML + GSAP), mais valent pour n'importe quel outil. Pour écrire le
+storyboard plan par plan au dixième de seconde (caméra, objets-ponts, calage voix, gabarit) : `STORYBOARD-CRAFT.md`, tiré de
+6 storyboards à l'envers ; il a corrigé ici D1, B1, C1, F3, G1 et les règles de rythme et de logo.
 
 ## Le profil type
 
@@ -16,15 +18,18 @@ fichier). Les recettes sont écrites pour HyperFrames (HTML + GSAP), mais valent
 - **Voix off** : 85 % des vidéos. Les autres sont musicales et tout passe par le texte à l'écran.
 - **Squelette** (présent dans quasiment toutes) : douleur (20 à 45 % de la durée), pivot, logo, 3 à 4 bénéfices montrés par des
   gestes d'interface, preuve chiffrée, carte de fin avec bouton cliqué.
-- **Rythme** : une nouvelle composition toutes les 2 à 4 s, mais **très peu de coupes franches** (médiane 4 par vidéo, 0 dans
-  beaucoup) : tout s'enchaîne en continu (morph, caméra, masque, objet qui traverse) et les rares coupes marquent les
-  changements d'acte.
-- **Logo** : jamais à la première image. Il arrive entre 5 et 30 s, au moment du pivot.
+- **Rythme** : une nouvelle composition toutes les 1 à 4 s, mais surtout **un événement toutes les 0,5 à 1 s** (arrivée,
+  geste, clic, cran de caméra) : c'est cette cadence qui compte, pas le nombre de plans (Aikido : 2,8 plans / 10 s, 3 à 6
+  temps par plan). Tout s'enchaîne en continu (morph, caméra, objet qui traverse) ; le nombre de coupes franches dépend de
+  la voix (voir D1).
+- **Logo** : jamais comme signature à la première image. Le logo complet arrive entre 5 et 30 s, au pivot ; il peut
+  apparaître plus tôt s'il est un objet du récit qui se transforme aussitôt (Slack : pastille logo à 0,07 s qui devient la
+  barre de recherche ; lemlist : pilule à 3,4 s).
 
 ## Pourquoi elles circulent (lecture croisée des 56)
 
-1. **Lisibles sans le son.** Le texte à l'écran reprend la voix mot par mot : sur un fil LinkedIn en lecture automatique muette,
-   la vidéo se comprend quand même.
+1. **Lisibles sans le son.** Le texte à l'écran reprend la voix mot par mot, en version réécrite et raccourcie : sur un fil
+   LinkedIn en lecture automatique muette, la vidéo se comprend quand même.
 2. **Elles parlent à la cible dès le premier mot** (« Formateurs indépendants », « Tu es en Terminale », « Frustrated with
    security tools…? »), et l'image de la première seconde illustre exactement ce mot.
 3. **La douleur est montrée dans les outils que la cible utilise** (Gmail à badge rouge, tableur Excel, ChatGPT, visio,
@@ -32,7 +37,7 @@ fichier). Les recettes sont écrites pour HyperFrames (HTML + GSAP), mais valent
 4. **Une grammaire visuelle très serrée** : une seule couleur d'accent, un seul mécanisme de mise en valeur, un ou deux fonds.
    Rien ne se contredit, donc l'œil ne se fatigue pas.
 5. **De l'émotion** : personnage stressé, voix qui joue un rôle, ironie, chute drôle. C'est ce qui se partage.
-6. **Des preuves qui bougent** : chaque chiffre roule jusqu'à sa valeur au lieu d'être posé.
+6. **Des preuves qui bougent** : chaque chiffre roule jusqu'à sa valeur ou fonce depuis la caméra, au lieu d'être posé.
 7. **Une fin qui dit quoi faire** : un seul bouton, qu'un curseur vient cliquer.
 
 (Lecture qualitative : les chiffres de vues ne sont pas publics. Les fréquences ci-dessous sont comptées sur les 56 fiches.)
@@ -73,7 +78,10 @@ fichier). Les recettes sont écrites pour HyperFrames (HTML + GSAP), mais valent
 ### B1. Une composition par phrase, texte mot par mot calé sur la voix (≈ 45 / 56)
 - **Observable** : chaque phrase de la voix a son écran ; le texte reprend la phrase (ou sa version courte), **centré, petit**
   (2 à 5 % de la hauteur), jamais en sous-titre de bas de cadre ; chaque mot arrive au moment où il est prononcé, souvent
-  flou ou gris puis net ; parfois les mots à venir sont déjà là en gris très pâle.
+  flou ou gris puis net ; parfois les mots à venir sont déjà là en gris très pâle. C'est une **réécriture choisie phrase
+  par phrase**, pas un sous-titre intégral : Aikido écrit « One platform to rule them all » sur « No fragmented tools
+  required » et n'écrit pas « Aikido makes it simple » pour garder le nom au logo ; certaines phrases n'ont aucun texte
+  (lemlist « Vous savez ce petit… ») ; Calendly n'a aucun sous-titre, chaque phrase y a un geste d'image.
 - **Recette** : minutage mot par mot de la voix (Whisper) ; par mot `fromTo({opacity:0, filter:'blur(8px)', y:8}, {opacity:1,
   filter:'blur(0)', y:0, 0,3 s, power3.out})` sur son timestamp ; variante « mots à venir » : tous les mots posés à 15 %
   d'opacité, chacun passe à 100 % sur son timestamp.
@@ -125,8 +133,11 @@ fichier). Les recettes sont écrites pour HyperFrames (HTML + GSAP), mais valent
 
 ## C. Couleur, fond, lumière
 
-### C1. Une seule couleur d'accent pour toute la vidéo (≈ 50 / 56)
-- Tout le reste en neutres ; l'accent sert au mot-clé, à la pastille, au bouton final, au curseur.
+### C1. Une couleur d'accent par rôle, jamais deux pour le même rôle (≈ 50 / 56)
+- Tout le reste en neutres ; l'accent sert au mot-clé, à la pastille, au bouton final, au curseur. Le plus souvent une
+  seule couleur pour tout le film ; variantes vues au dixième de seconde : un accent par acte (lemlist, bleu au clair,
+  rouge dans l'acte sombre) ou une couleur par rôle (Aikido : violet mot-clé, lavande chiffres, teal contours, rouge
+  douleur).
 
 ### C2. Deux univers : un fond pour la douleur, un fond pour la solution (≈ 25 / 56)
 - **Observable** : la douleur vit sur un fond sombre ou saturé ; au pivot (logo), le fond passe franchement au clair de la marque
@@ -145,8 +156,15 @@ fichier). Les recettes sont écrites pour HyperFrames (HTML + GSAP), mais valent
 
 ## D. Rythme et transitions
 
-### D1. Continu, coupes franches réservées aux changements d'acte (≈ 45 / 56)
-- 0 à 4 coupes franches par vidéo ; tout le reste passe par dézoom, glissement, morph, objet qui traverse, zoom à travers.
+### D1. Continu par objets ; le quota de coupes franches dépend de la voix (≈ 45 / 56)
+- **Voix narrative** (Aikido 1, Calendly 2, Collective 3) : 0 à 4 coupes franches, aux changements d'acte, souvent
+  masquées au sommet du flou d'un mouvement, sur le premier mot de l'acte ou dans un silence.
+- **Voix jouée**, personnage ou gags (Slack 22, lemlist 12 + 5 coupes à raccord) : la voix porte la continuité, l'image
+  coupe sur le premier mot de chaque idée (± 0,1 s) ; les noirs sont des plans de réplique.
+- **Sans voix** (Taapit 12) : coupes structurelles seulement (ouverture de chapitre sur cadre vide, changement de couleur
+  du monde, raccord dans l'axe).
+- Toujours : aucune coupe gratuite, 0 à 2 fondus par film ; tout le reste passe par un objet qui change de rôle ou par la
+  caméra. Détail et recettes : `STORYBOARD-CRAFT.md`, loi 6.
 
 ### D2. Transitions « objet » plutôt que transitions « effet »
 - **Cercle, anneau ou iris** qui naît au centre et ouvre la scène suivante, en 0,25 à 0,75 s (≈ 12 / 56) : QIPLIM (3 cercles
@@ -157,7 +175,7 @@ fichier). Les recettes sont écrites pour HyperFrames (HTML + GSAP), mais valent
   suivant (FundTruck 8,5-9,8 s) ; une cerise tombe du gâteau dans la terre du potager (Nigloland).
 - **Titre qui se range** : un titre seul au centre ~1 s, qui rétrécit et monte, le contenu entre dans la place libérée (Aikido,
   Tulyp, Digischool).
-- **Flash ou inondation de couleur** de 0,3 à 0,5 s comme coupe de chapitre (Submagic, Gojiberry).
+- **Flash ou inondation de couleur** de 0,3 à 0,5 s comme coupe de chapitre (Submagic, Chris Scholly, Gojiberry).
 - **Flou de mouvement directionnel** avec lignes de vitesse pour les passages rapides (MergerCircle, Collective, Mush).
 
 ### D3. Deux vitesses (Plus que pro)
@@ -203,9 +221,11 @@ fichier). Les recettes sont écrites pour HyperFrames (HTML + GSAP), mais valent
 - Texte tapé dans un vrai champ (prompt, recherche, message), toggle activé par le curseur au moment où la voix nomme la
   fonctionnalité, cases cochées une par une.
 
-### F3. Chiffres qui roulent (≈ 25 / 56)
+### F3. Chiffres qui roulent ou qui foncent, jamais posés (≈ 25 / 56)
 - Compteur qui défile jusqu'à la valeur, avec une pastille d'unité dessous ; parfois la taille grandit avec la valeur ; souvent
-  flou de mouvement pendant le défilement. Submagic roule de 999 563 à 1 000 000 derrière le fondateur à la seconde 1.
+  flou de mouvement pendant le défilement. Submagic roule de 999 563 à 1 000 000 derrière le fondateur à la seconde 1 ;
+  Taapit sort d'un masque en comptant, +42 à +97 en 0,6 s puis les 3 dernières unités en 0,55 s.
+- Variante : le chiffre arrive entier depuis la caméra, ×6 et flou, posé en 0,28 s `expo.out` (Aikido « -85% »).
 
 ### F4. Orbite ou couronne autour du centre (≈ 15 / 56)
 - 6 à 12 icônes d'outils ou avatars en cercle autour du logo ou d'un objet ; des points voyagent sur les lignes ; les lignes
@@ -224,8 +244,10 @@ fichier). Les recettes sont écrites pour HyperFrames (HTML + GSAP), mais valent
 
 ### G1. La carte de fin standard (≈ 45 / 56)
 - Logo (souvent construit : lettres qui tombent ou s'écrivent), promesse d'une ligne, **un seul bouton** plein de la couleur
-  d'accent, **un curseur qui entre et clique** (onde ou anneau qui s'étend), URL en petit ou tapée dans une barre de
-  recherche. Tenue de 3 à 8 s, puis fondu.
+  d'accent, **un curseur qui entre en courbe, hésite et clique** (onde ou anneau qui s'étend, bouton qui se remplit), URL
+  en petit ou tapée dans une barre de recherche. Carte de 3 à 6 s, dont 2 à 3 s de tenue vivante après le clic (orbites,
+  dérive), puis iris ou noir : aucune des 6 références revues au dixième de seconde ne finit en fondu sur image figée.
+  Variante sans bouton : logo rejoué et personnage qui respire (Calendly).
 
 ---
 
@@ -234,16 +256,16 @@ fichier). Les recettes sont écrites pour HyperFrames (HTML + GSAP), mais valent
 - [ ] La première image est un mot, pas le logo ; le premier mot nomme la cible ou sa douleur.
 - [ ] L'image de la seconde 1 illustre exactement le premier mot.
 - [ ] Chaque phrase de la voix a sa composition ; le texte arrive mot par mot sur la voix, petit et centré.
-- [ ] Un seul mot en couleur d'accent par phrase ; une seule couleur d'accent dans toute la vidéo.
+- [ ] Un seul mot en couleur d'accent par phrase ; une seule couleur d'accent par rôle (ou par acte), jamais deux pour le même rôle.
 - [ ] Un seul mécanisme de mise en valeur (pastille qui se trace, surligneur…) répété toute la vidéo.
 - [ ] 2 à 5 mots géants maximum, placés sur les pics émotionnels, si possible derrière un objet.
 - [ ] La douleur est montrée dans un outil que la cible reconnaît, et son volume par un essaim.
 - [ ] Il y a un pivot explicite (mot seul, noir, question) avant le logo, et le fond change avec lui.
-- [ ] Le logo n'arrive pas avant 5 s.
-- [ ] 0 à 4 coupes franches, toutes aux changements d'acte ; le reste s'enchaîne par des objets.
-- [ ] Chaque chiffre roule jusqu'à sa valeur.
+- [ ] Le logo complet n'arrive pas avant 5 s (sauf s'il est un objet du récit qui se transforme aussitôt).
+- [ ] Coupes franches au quota de la voix (narrative : 0 à 4, aux changements d'acte ; jouée : sur le premier mot de chaque idée) ; 0 à 2 fondus ; le reste s'enchaîne par des objets.
+- [ ] Chaque chiffre roule jusqu'à sa valeur ou fonce depuis la caméra ; aucun n'est posé en fondu.
 - [ ] Le produit est montré par des gestes (taper, cocher, cliquer), pas par une capture posée.
 - [ ] Un élément de l'accroche revient avant la fin.
-- [ ] Carte de fin : un seul bouton, un curseur qui clique, tenue de 3 à 8 s.
+- [ ] Carte de fin : un seul bouton, un curseur qui hésite puis clique, 2 à 3 s de tenue vivante après le clic, puis iris ou noir.
 - [ ] Lisible sans le son de bout en bout.
 - [ ] Rendu : aucune animation de `letterSpacing` (lettres découpées et déplacées à la place) ; un fond du monde clair posé sous toutes ses séquences, pour que les fondus ne grisent pas.

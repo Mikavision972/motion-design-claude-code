@@ -12,8 +12,12 @@ Found while making the example films with this exact stack (HyperFrames 0.8.82, 
 - **A voice cut on a word** clicks or swallows a syllable. Cut only in the middle of a silence (`cut point` printed by
   `onsets.py --no-whisper`), with 5 ms fades on every join (`build-audio.sh` does it). Every cue after a cut moves by the
   silence inserted before it: re-run `onsets.py` on the montage.
-- **Same template for 10 s** reads as slow even with content changing inside. A new composition every 2 to 3 s:
+- **Same template for 10 s** reads as slow even with content changing inside. Never the same layout for more than 3 s:
   change the framing, the text position and the object, bring elements back as reminders but never in the same frame.
+- **Enough shots, not enough events.** A film can cut every 2 s and still feel static: the version before
+  `examples/C-le-devis-v7a/` had 4.6 shots per 10 s (in the norm) but a fixed camera 95 % of the time and 31 % of its
+  tenths of a second almost still. Write an event every 0.5 to 1 s and a camera track in every shot
+  (`patterns/STORYBOARD-CRAFT.md`, laws 1 and 2).
 
 ## Frames (workers)
 
@@ -27,8 +31,21 @@ Found while making the example films with this exact stack (HyperFrames 0.8.82, 
   black host page. The ground is its own full-duration `class="clip"` layer.
 - **Packet over 48 KB** makes `frame-packets.mjs` fail. A blueprint weighs 5 to 29 KB, a rule 5 to 10 KB: 1 to 3 rules
   per frame. Every rule id written anywhere in the frame block (for example "(→ cursor-click-ripple)") is inlined too.
-- **Infinite loops** (`repeat: -1`, yoyo, CSS animations, `Math.random`) break the seek-based render. Finite tweens,
-  randomness derived from the index.
+- **An inner `<template id>` placed beside the frame root** (a reusable fragment the frame clones with
+  `getElementById(...).content`): the engine only embeds the root element, the lookup returns null and the whole frame
+  stays black (two frames of `examples/C-le-devis-v7a/`). The lint does not see it; `npx hyperframes validate` prints
+  "Cannot read properties of null (reading 'content')". The inner template lives INSIDE the root.
+- **`style.visibility = "visible"` in a frame**: a child forced visible no longer inherits the hidden state of its
+  frame, so it shows over the whole film (frame 09 of the same film covered 0 to 33 s). Always `"inherit"`.
+- **Session cuts kill workers mid-write** (two in one afternoon on the same film). Ask each worker to write a complete
+  first version early, then refine it; before resuming, `check-frames.py` and re-dispatch only what is MISSING or
+  BROKEN (`variants.md` § Resume): 9 frames out of 10 were kept.
+- **Two workers, one seam, two images**: without a written handoff, each worker imagines the camera and the objects at
+  the seam and the cut jumps. The storyboard writes `handoff_out` of frame N and copies it word for word into
+  `handoff_in` of frame N+1 (camera state, blur, world state, objects, light, text); check it with the script of
+  `method.md` § 6, then on the render, image by image (§ 12).
+- **Infinite loops** (`repeat: -1`, an endless yoyo, CSS animations, `Math.random`) break the seek-based render. Finite
+  tweens (a living hold repeats `Math.ceil(D / period)` times), randomness derived from the index.
 - **The core worker contract forbids narration text on screen** because HeyGen's default pipeline burns captions. This
   method disables captions and shows the sentence itself, word by word: the dispatch template says so explicitly.
 - **CSS `transform` on an element that GSAP moves** is silently overwritten (the centering jumps). Center with margins

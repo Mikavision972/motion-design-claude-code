@@ -12,9 +12,13 @@ of each step is in `references/method.md`; this file is the order, the commands 
 replaces Steps 0 to 3.1 of `product-launch-video` (no preset capture, no HeyGen voice or music API) and reuses its
 packet builder, assembler and transition injector.
 
-**The rule that makes it look like an agency**: a different image every 2 to 3 s. A new composition at every sentence
-or half-sentence; never the same layout for more than 3 s, even if the content inside changes. Vary the framing (full
-text, close-up on a detail, glass card, diagram, giant number), the text position and the object shown.
+**The rule that makes it look like an agency**: the film is written as a storyboard before anything is animated, and
+the rhythm is counted in events, not in shots. Something new every 0.5 to 1 s (every 0.1 to 0.3 s in the hook), a
+camera that never stops (a slow drift plus dated moves toward what comes next), a bridge object at every seam (an
+object of shot N takes another role in shot N+1), elements that arrive too big and blurred from the camera then
+settle, three depth levels. A new composition every 1 to 4 s and never the same layout for more than 3 s, even if the
+content inside changes. The grammar, with its numbers and GSAP recipes: `patterns/STORYBOARD-CRAFT.md` (repository
+root).
 
 ## Steps
 
@@ -23,9 +27,10 @@ text, close-up on a detail, glass card, diagram, giant number), the text positio
 1. **Script, co-imagined (gate).** Ask the few missing facts, propose 5 to 7 concepts in one line each, write 2 or 3 in
    full (110 to 130 words), let the user choose and correct word by word. Rules: `references/method.md` § 1.
 2. **Project folder.**
-   `npx hyperframes init <project> --non-interactive --example=blank`, then copy the templates, create
-   `assets/{audio,fonts,icons}`, fetch the fonts and tool icons (commands: `references/method.md` § 2). Save the script
-   as `<project>/SCRIPT.md`.
+   `npx hyperframes init <project> --non-interactive --example=blank`, then copy the templates (this skill's
+   `templates/` and `templates/DIRECTIONS-TEMPLATE.md` at the repository root), create `assets/{audio,fonts,icons,img}`
+   and `styleframes/`, fetch the fonts and tool icons (commands: `references/method.md` § 2). Save the script as
+   `<project>/SCRIPT.md`.
 3. **Voice (user action, wait).** Write the ElevenLabs v3 version with tags and numbers in letters, explain the
    settings, wait for `<project>/assets/audio/voix.mp3`. `references/voice-elevenlabs.md`.
 4. **Timings.**
@@ -34,23 +39,49 @@ text, close-up on a detail, glass card, diagram, giant number), the text positio
    `python3 .claude/skills/motion-design/scripts/onsets.py <project>/assets/audio/voix-montage.wav --script <project>/SCRIPT.md --out <project>/onsets.json`.
    From now on every cue comes from `onsets.json` (`--transcript <project>/onsets.json --window START END` for
    frame-local cues).
-5. **Frame spec.** Fill `<project>/frame.md`: colors as roles, one accent, one highlight mechanism (the traced pill),
-   the product components. `grep -n "{{" <project>/frame.md` must print nothing.
-6. **Storyboard (gate).** Fill `<project>/STORYBOARD.md`: frames of 3 to 7 s cut in the silences, exact voiceover,
-   frame-local word cues, one blueprint and 1 to 3 rules per frame, Scene lines every 2 to 3 s, one [pill: ...] per
-   sentence, 2 to 5 [giant: ...]. Pass the control grid below, check the sum of durations with a script
-   (`references/method.md` § 6), show the frame list and wait for approval (autonomous: heads-up).
-7. **Packets.** `node .claude/skills/product-launch-video/scripts/frame-packets.mjs --project <project> --storyboard <project>/STORYBOARD.md`
-   (each packet under 48 KB, otherwise cut a rule from that frame).
+5. **Three directions, then the frame spec (gate).** Read `patterns/STORYBOARD-CRAFT.md` (the 10 laws) and
+   `patterns/PATTERNS.md`. Copy `templates/DIRECTIONS-TEMPLATE.md` (repository root) to `<project>/DIRECTIONS.md` and
+   write 3 truly different directions for the same voice and timings: a concept (the place the camera travels
+   through), the thread of bridge objects, 3 styleframes each (A1 to C3: a frozen image of the future film at final
+   quality, real interfaces, motion suggested by blur and depth). One standalone 1920x1080 HTML page per styleframe in
+   `<project>/styleframes/`, one sub-agent per direction if you want, then
+   `python3 .claude/skills/motion-design/scripts/render-styleframes.py <project>`. Show the 9 PNGs side by side,
+   direction by direction, and **wait for the choice** (a direction plus its borrowings). Then fill `<project>/frame.md`
+   for that direction: colors as roles, one accent, one highlight mechanism (the traced pill), the world with the
+   coordinates of its stations, the recurring objects, the camera kit, the real interfaces (from a recent screenshot
+   the user gives, never from memory). When the world is complex, write its code once in
+   `<project>/reference/<world>.html` (the single source every frame copies verbatim, like
+   `examples/C-le-devis-v7a/reference/devis-decor.html`). `grep -n "{{" <project>/frame.md` must print nothing.
+   `references/method.md` § 5.
+6. **Storyboard, sequence by sequence (gate).** Fill `<project>/STORYBOARD.md` (skeleton: this skill's
+   `templates/STORYBOARD.md`; format and filled example: `templates/STORYBOARD-TEMPLATE.md` at the repository root):
+   the film header (world,
+   signatures, camera score, voice silences, cuts, rhythm, sound), then one frame of 3 to 6 s per idea of the voice,
+   cut in the silences, with its exact voiceover, frame-local word cues, one blueprint and 1 to 3 rules, and one block
+   per shot: screen text, starting image, steps every 0.5 s, camera track, layers and depth, bridge object or vector,
+   sound, key image. **Camera handoff**: the `handoff_out` of frame N is copied word for word into the `handoff_in` of
+   frame N+1, so every seam falls at the top of a camera move's blur and two workers draw the same image there. Pass
+   the 15-point grid of `patterns/STORYBOARD-CRAFT.md` § 5 and the control grid below, write the verdicts in
+   `<project>/STORYBOARD-CHECK.md` (example: `examples/C-le-devis-v7a/STORYBOARD-CHECK.md`), check the sum of
+   durations and the handoffs with the scripts of `references/method.md` § 6, show the frame list and wait for
+   approval (autonomous: heads-up).
+7. **One prompt per sequence (packets).**
+   `node .claude/skills/product-launch-video/scripts/frame-packets.mjs --project <project> --storyboard <project>/STORYBOARD.md`
+   builds one packet per frame, the worker's whole world (each under 48 KB, otherwise cut a rule from that frame).
 8. **Frames, one sub-agent each.** Pilot first: frame 1 alone, `bash <project>/assemble.sh`,
-   `cd <project> && npx hyperframes snapshot --at <3 or 4 times in frame 1>`, show it, lock the look. Then every other
-   frame in parallel with the dispatch template below. Done = the file exists on disk. `references/worker-dispatch.md`.
-   After a session cut: `python3 .claude/skills/motion-design/scripts/check-frames.py <project>` and re-dispatch only
-   the frames that are MISSING or BROKEN (`references/variants.md` § Resume).
+   `cd <project> && npx hyperframes snapshot --at <3 or 4 times in frame 1>`, show it, lock the look. Then the frames
+   that introduce a recurring object, then every other frame in parallel, with the dispatch template below. Done = the
+   file exists on disk. `references/worker-dispatch.md`. Pitfalls met on the example films (in the dispatch template):
+   an inner `<template id>` lives INSIDE the frame root, never beside it (otherwise the frame stays black, and only
+   `npx hyperframes validate` says so); never `style.visibility = "visible"` (always `"inherit"`, otherwise the element
+   shows over the whole film); workers write a complete first version early. After a session cut:
+   `python3 .claude/skills/motion-design/scripts/check-frames.py <project>` and re-dispatch only the frames that are
+   MISSING or BROKEN, never those that are OK (`references/variants.md` § Resume).
 9. **Assembly + orchestrator layer.** Fill the settings of `<project>/assemble.sh` (first frame, end card, `TOTAL`,
    audio, flash time and center, iris time and center, paper and accent colors) and run `bash <project>/assemble.sh`:
    HeyGen assembler, transitions, then audio at the root, paper bed under the light world, light flash from the dark
-   world into the light world, iris into the dark end card, and lint. `references/orchestrator-layer.md`.
+   world into the light world, iris into the dark end card, and lint. Then `cd <project> && npx hyperframes validate`
+   (runtime errors the lint does not see). `references/orchestrator-layer.md`.
 10. **Audio, in 3 or 4 music options.** Sound effects in `<project>/assets/audio/sfx-events.json` placed on the visual
     events (format: `.claude/skills/motion-design/templates/sfx-events.json`, names from
     `.claude/skills/media-use/audio/assets/sfx/`). CC0 tracks in `<project>/assets/music/` (sources:
@@ -58,14 +89,17 @@ text, close-up on a detail, glass card, diagram, giant number), the text positio
     `templates/build-music-options.py` copied into the project: music cut on the pivot with a low impact, drop on the
     flash, ducked under the voice, -16 LUFS, one `mix-<id>.wav` per option with its pivot check. Then
     `MIX=mix-M1.wav bash <project>/assemble.sh`. `references/music.md`.
-11. **Checks.** Lint clean (end of `assemble.sh`), `cd <project> && npx hyperframes check`, then
-    `cd <project> && npx hyperframes snapshot --at <every frame midpoint, each cut -0.1 and +0.2>` and read
-    `<project>/snapshots/contact-sheet.jpg`. Re-dispatch the frame concerned with the finding.
+11. **Checks.** Lint clean (end of `assemble.sh`), `cd <project> && npx hyperframes check` and `validate`, then
+    `cd <project> && npx hyperframes snapshot --at <every frame midpoint, and each seam -0.033, 0 and +0.033>` and read
+    `<project>/snapshots/contact-sheet.jpg`. At every seam the image must continue: same camera, same objects, same
+    blur, nothing doubled, nothing missing (seam times: `references/method.md` § 11). Re-dispatch the frame concerned
+    with the finding.
 12. **Render and real control.** `cd <project> && npx hyperframes render --quality high --output renders/video.mp4`,
     then `bash .claude/skills/motion-design/scripts/contact-sheets.sh <project>/renders/video.mp4` (black segments,
-    exit 2 if any; sheets at 4 images/s in `<project>/renders/contact-sheets/`). Open every sheet, pass the grid again,
-    fix, re-assemble, re-render. The other music options need no render:
-    `python3 <project>/build-music-options.py --mux <project>/renders/video.mp4`.
+    exit 2 if any; sheets at 4 images/s, at least one image every 0.5 s, in `<project>/renders/contact-sheets/`) and
+    one strip per seam, image by image (`references/method.md` § 12). Open every sheet and every strip, pass the grid
+    again, fix, re-assemble, re-render. Never say it is done before this control. The other music options need no
+    render: `python3 <project>/build-music-options.py --mux <project>/renders/video.mp4`.
 13. **Delivery.** MP4 path per music option, duration (`ffprobe`), contact sheets, frame ids for targeted revisions.
     For a website: web encode, poster, muted autoplay, framed player (`references/landing-integration.md`,
     `templates/LaunchFilm.tsx`). Offer the silent loop (8 to 18 s) too.
@@ -74,24 +108,27 @@ text, close-up on a detail, glass card, diagram, giant number), the text positio
 
 ## Control grid (storyboard, then render)
 
-From `patterns/PATTERNS.md` (56 launch films analyzed frame by frame):
+From `patterns/PATTERNS.md` (56 launch films analyzed frame by frame). The storyboard also passes the 15 points of
+`patterns/STORYBOARD-CRAFT.md` § 5 (events, camera, bridge objects, depth, voice sync, ending).
 
 - [ ] First image = a word alone, not the logo; the first word names the target or their pain.
 - [ ] The image at second 1 illustrates exactly that first word.
 - [ ] Every sentence of the voice has its composition; text arrives word by word, small and centered.
-- [ ] One accent word per sentence, one accent color in the whole film, one highlight mechanism (the traced pill).
+- [ ] One accent word per sentence, one accent color per role (or per act), one highlight mechanism (the traced pill).
 - [ ] 2 to 5 giant words, on the emotional peaks, behind an object when possible.
 - [ ] The pain is shown in a tool the target recognizes, its volume by a swarm of objects.
 - [ ] An explicit pivot (word alone, silence, question) before the brand, and the ground changes with it.
-- [ ] The logo does not arrive before 5 s.
-- [ ] 0 to 4 hard cuts, all at act changes; everything else chains through objects.
-- [ ] Every number rolls to its value.
+- [ ] The full logo does not arrive before 5 s (unless it is an object of the story that transforms at once).
+- [ ] Hard cuts at the quota of the voice (narrative: 0 to 4, at act changes); 0 to 2 fades; everything else chains
+      through objects or the camera, and every seam matches its handoff.
+- [ ] Every number rolls to its value or rushes in from the camera; none is faded in.
 - [ ] The product is shown by gestures (type, tick, click), not by a static screenshot.
 - [ ] An element of the hook comes back before the end.
-- [ ] End card: one button, a cursor that clicks it, held 3 to 8 s.
+- [ ] End card: one button, a cursor that hesitates then clicks, 2 to 3 s of living hold, then iris or black.
 - [ ] Readable without sound from start to end.
-- [ ] A different image every 2 to 3 s.
-- [ ] Render: no `letterSpacing` tween; a paper bed under the light world; no black segment.
+- [ ] Something new every 0.5 to 1 s, no frozen hold, never the same layout for more than 3 s.
+- [ ] Render: no `letterSpacing` tween; a paper bed under the light world; no black segment; no element shown outside
+      its frame.
 
 ## Dispatch template (one per frame, absolute paths)
 
@@ -118,8 +155,16 @@ Read first, in this order, and follow them as your role:
 - Word cues are frame-local seconds: each word appears on its cue (0 to 2 frames early), never late.
 - A frame is not masked before its start: every element not on screen at t=0 starts with `opacity: 0` in CSS, and
   every `fromTo` that starts after t=0 has `immediateRender: false`.
-- A new composition every 2 to 3 s, as the Scene lines say. power3.out / expo.out, no bounce, exits faster than entries.
-- Never tween `letterSpacing` (split the word into letters, tween `x`). No `repeat: -1`, no yoyo, no `Math.random`.
+- Follow the steps of the Scene lines at their times (an event every 0.5 s, the camera track apart from the object
+  tweens, no frozen hold). power3.out / expo.out, no bounce, exits faster than entries.
+- handoff_in and handoff_out are binding: your first image is exactly handoff_in, your last image is exactly handoff_out.
+- An inner `<template id="...">` (a reusable fragment) goes INSIDE the root element of the frame, never beside it: the
+  engine only embeds the root, and the frame renders black.
+- Never set `style.visibility = "visible"`: use `"inherit"`, otherwise the element shows over the whole film.
+- Write a complete first version of your file early (every scene roughed in, timeline registered), then refine it: a
+  session cut must not leave a half-written file.
+- Never tween `letterSpacing` (split the word into letters, tween `x`). No `repeat: -1` and no CSS animation: a loop
+  (the living layer of a hold) repeats a finite number of times computed from the frame duration. No `Math.random`.
 - Fonts and icons from `assets/...` (project-root relative), never from the network. No `<audio>`.
 - Only the copy quoted in the Scene lines appears on screen, in the language and typography of the voice.
 - Do not run any `npx hyperframes` command, do not edit any other file. Writing your file is your last action.
@@ -130,14 +175,17 @@ Read first, in this order, and follow them as your role:
 | File | When |
 |---|---|
 | `references/method.md` | the detail and the exact commands of every step |
+| `patterns/STORYBOARD-CRAFT.md` (repository root) | steps 5 and 6: the 10 laws of an agency storyboard, the format, the 15-point grid |
+| `templates/DIRECTIONS-TEMPLATE.md`, `templates/STORYBOARD-TEMPLATE.md` (repository root) | steps 5 and 6: the three directions, the film header and the sequence block with a filled example |
+| `examples/C-le-devis-v7a/` (repository root) | a complete storyboard made this way: directions, frame spec, storyboard, checked grid, executable world reference |
 | `references/voice-elevenlabs.md` | step 3 |
 | `references/worker-dispatch.md` | steps 7 and 8 |
 | `references/orchestrator-layer.md` | step 9 |
 | `references/music.md` | step 10: pick, sync and mix the music options, commercial-safe CC0 sources |
 | `references/landing-integration.md` | step 13: put the film on a website |
 | `references/variants.md` | step 14, and to resume after a session cut |
-| `references/pitfalls.md` | before step 6, and whenever something looks wrong |
-| `patterns/PATTERNS.md` (repository root) | steps 1 and 6 (choose patterns), 11 and 12 (control) |
+| `references/pitfalls.md` | before steps 6 and 8, and whenever something looks wrong |
+| `patterns/PATTERNS.md` (repository root) | steps 1, 5 and 6 (choose patterns), 11 and 12 (control) |
 | `templates/` | `frame.md`, `STORYBOARD.md`, `assemble.sh`, `build-audio.sh`, `sfx-events.json`, `build-music-options.py`, `LaunchFilm.tsx` |
-| `scripts/` | `onsets.py` (timings), `analyze-music.py` (tempo, drops, sync), `contact-sheets.sh` (render control), `check-frames.py` (resume), `waveform.py` (real voice envelope) |
+| `scripts/` | `onsets.py` (timings), `render-styleframes.py` (styleframes to PNG), `analyze-music.py` (tempo, drops, sync), `contact-sheets.sh` (render control), `check-frames.py` (resume), `waveform.py` (real voice envelope) |
 | `.claude/skills/hyperframes-animation/blueprints-index.md`, `rules-index.md` | step 6: shot shapes and motion recipes |

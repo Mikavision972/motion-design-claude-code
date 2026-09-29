@@ -1,6 +1,8 @@
 # Exemples
 
-Trois films faits avec la méthode de ce dépôt, le 2026-09-28, pour la landing page d'[Entrepreneurs 2.0](https://entrepreneurs2-0.com).
+Des films faits avec la méthode de ce dépôt pour la landing page d'[Entrepreneurs 2.0](https://entrepreneurs2-0.com) :
+trois films le 2026-09-28, les options du devis dans la nuit qui a suivi, puis le devis refait à partir d'un vrai
+storyboard le 2026-09-29 (`C-le-devis-v7a/`, plus bas).
 
 | Dossier | Film | Durée | Idée |
 | --- | --- | --- | --- |
@@ -16,7 +18,7 @@ et `music.md`).
 
 | Dossier | Option | Idée |
 | --- | --- | --- |
-| `le-devis-options/poli/` | 1, Poli | Le devis avec le personnage « toi » redessiné (mains sur la tête lisibles, sourcils inquiets, goutte de sueur) et « libre. » en pic, dans une pastille géante pendant que le devis barré s'envole. C'est la version en ligne sur le site, avec la musique M1 : `le-devis-options/poli/le-devis-poli.mp4` (encodage web, 5,6 Mo). |
+| `le-devis-options/poli/` | 1, Poli | Le devis avec le personnage « toi » redessiné (mains sur la tête lisibles, sourcils inquiets, goutte de sueur) et « libre. » en pic, dans une pastille géante pendant que le devis barré s'envole. C'est la première version mise en ligne sur le site, avec la musique M1 : `le-devis-options/poli/le-devis-poli.mp4` (encodage web, 5,6 Mo). |
 | `le-devis-options/nuit/` | 2, Nuit | Le même film tout en sombre : la solution sur une « nuit chaude » éclairée en terracotta, cartes en verre chaud, pas de fond papier, flash chaud. Fait pour se fondre dans le haut sombre d'une page. |
 | `le-devis-options/bureau/` | 3, Le bureau | Une direction neuve : le film vu du dessus d'un bureau, avec de vrais objets (devis papier, stylo terracotta, post-it déchiré, tampon SUR DEVIS, éphéméride, pile de factures, portable, carnet où le zéro est dessiné). |
 
@@ -40,7 +42,33 @@ Pour refaire une option :
 Seule la vidéo de l'option Poli est incluse. La direction Bureau pèse lourd au rendu (69 Mo pour 43 s, à cause du bois
 et du grain) : à ré-encoder pour le web avant de la mettre sur un site (`.claude/skills/motion-design/references/landing-integration.md`).
 
-Chaque dossier contient :
+## Le devis refait à partir d'un vrai storyboard (`C-le-devis-v7a/`, 29 septembre 2026)
+
+« Le devis est le décor », 43,2 s, le film du début de la vidéo YouTube sur la méthode. Même voix, même musique et mêmes
+bruitages que les versions précédentes : seule la mise en scène change, et elle est entièrement écrite avant d'animer
+(étape 4 de la méthode). Le film « Le devis » tourne sur [entrepreneurs2-0.com](https://entrepreneurs2-0.com), juste
+sous le haut de page, en lecture muette automatique.
+
+Ce que montre cet exemple, dans l'ordre où il a été fait :
+
+| Fichier | Ce qu'il montre |
+| --- | --- |
+| `DIRECTIONS.md` | Les trois directions proposées sur la même voix : A « Le devis est le décor » (retenue), B « Deux conversations », C « La ligne du temps », chacune avec son concept, son fil d'objets-ponts et ses trois images de style à dessiner. Modèle : `../../templates/DIRECTIONS-TEMPLATE.md`. |
+| `render-styleframes.py` | Le rendu des images de style (une page HTML 1920 × 1080 par image, dans `styleframes/`) en PNG, avec Chromium sans fenêtre. Même script que `.claude/skills/motion-design/scripts/render-styleframes.py` : `python3 render-styleframes.py <projet> [A1 B2 …]`. |
+| `frame.md` | La charte de la direction A : un seul lieu, un vrai devis d'agence de 1500 × 2120 u décrit au pixel (lignes, cellules prix, case TOTAL, états du devis d'une séquence à l'autre), la caméra 3D et son flou de profondeur à trois couches, l'éclairage aller (nuit) et retour (plein jour), les vraies interfaces (iPhone 18, WhatsApp iOS 2026, fenêtre Claude, vrai site). |
+| `reference/devis-decor.html` | Le code exécutable du décor et du kit caméra : ouvre le fichier dans Chrome et appelle `demo({...})` dans la console pour voir n'importe quel état. Chaque séquence recopie ce bloc mot pour mot : le devis est le même des deux côtés de chaque couture. |
+| `STORYBOARD.md` | Le storyboard complet : l'en-tête du film (monde, deux mécanismes signature, rimes, partition caméra, silences, une seule coupe franche sur « Stop. », rythme, bruitages), puis 10 séquences et 27 plans, chacun en étapes toutes les 0,5 s environ avec sa piste caméra, sa profondeur, son objet-pont, son bruitage et son image clé. Chaque `handoff_out` est recopié mot pour mot dans le `handoff_in` de la séquence suivante. Modèle : `../../templates/STORYBOARD-TEMPLATE.md`. |
+| `STORYBOARD-CHECK.md` | La grille de contrôle en 15 points de `patterns/STORYBOARD-CRAFT.md` passée sur ce storyboard, point par point : tenu, tenu après correction (avec la correction), ou non tenu (avec sa raison). |
+
+Ne sont pas inclus : la vidéo, la voix, la musique, les bruitages, les polices, les images (images de style en PNG,
+capture du site), les séquences HTML animées, ni les fichiers `reference/v6-*.html` cités par la charte (les vraies
+interfaces reprises de la version précédente, non publiée ; les séquences les plus proches publiées ici sont dans
+`le-devis-options/poli/compositions/frames/`). Cet exemple sert à lire et à copier la méthode du storyboard, pas à
+refaire le rendu.
+
+## Contenu des dossiers de film
+
+Chaque dossier de film (les trois films et les trois options) contient :
 
 - `frame.md` : la charte (couleurs par rôle, typographie, composants, interdits).
 - `STORYBOARD.md` : le film découpé en séquences, minuté mot par mot sur la voix.
