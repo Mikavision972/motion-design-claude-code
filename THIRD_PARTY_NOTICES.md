@@ -35,8 +35,12 @@ La copie n'est pas identique à l'amont : elle a été durcie pendant l'audit du
 
 - **Polices** : Instrument Sans, Space Mono et Big Shoulders, [Google Fonts](https://fonts.google.com), SIL Open Font License 1.1. Téléchargées dans chaque projet (commandes dans `.claude/skills/motion-design/references/method.md`).
 - **Logos d'outils** : [Simple Icons](https://simpleicons.org), licence CC0 pour les fichiers SVG. Les logos restent des marques de leurs propriétaires : ne les utilise que pour montrer l'outil tel qu'il est.
-- **Musique** : un morceau sous licence CC0 (domaine public) de ton choix, par exemple [HoliznaCC0](https://freemusicarchive.org/music/holiznacc0/) sur Free Music Archive. Vérifie la licence de chaque morceau.
+- **Musique** : des morceaux sous licence CC0 (domaine public) de ton choix, par exemple de [HoliznaCC0](https://freemusicarchive.org/music/holiznacc0/), [Loyalty Freak Music](https://freemusicarchive.org/music/Loyalty_Freak_Music/) ou [Komiku](https://freemusicarchive.org/music/Komiku/) (morceaux marqués CC0 seulement) sur Free Music Archive. Vérifie la licence sur la page de chaque morceau. Les dix morceaux utilisés pour les options du devis sont listés, avec leurs liens, dans `.claude/skills/motion-design/references/music.md` (les fichiers ne sont pas inclus).
 - **Voix** : générée par toi sur [ElevenLabs](https://elevenlabs.io), soumise à leurs conditions (forfait payant obligatoire pour un usage commercial).
+
+## Films d'exemple (`examples/`)
+
+Les vidéos d'exemple contiennent une voix générée sur ElevenLabs (forfait payant, usage commercial), des bruitages Pixabay (Pixabay Content License) et, pour `examples/le-devis-options/poli/le-devis-poli.mp4`, deux morceaux en CC0 1.0 : « Waiting TTTT » de Loyalty Freak Music et « Dear Mr Super Computer » de HoliznaCC0 (freemusicarchive.org). Pour `examples/le-devis/le-devis.mp4`, la musique est « Night Life » de HoliznaCC0, en CC0 1.0 également. La mention est facultative en CC0, elle est donnée par courtoisie.
 
 ## Patterns (`patterns/PATTERNS.md`)
 

@@ -45,23 +45,32 @@ text, close-up on a detail, glass card, diagram, giant number), the text positio
 8. **Frames, one sub-agent each.** Pilot first: frame 1 alone, `bash <project>/assemble.sh`,
    `cd <project> && npx hyperframes snapshot --at <3 or 4 times in frame 1>`, show it, lock the look. Then every other
    frame in parallel with the dispatch template below. Done = the file exists on disk. `references/worker-dispatch.md`.
+   After a session cut: `python3 .claude/skills/motion-design/scripts/check-frames.py <project>` and re-dispatch only
+   the frames that are MISSING or BROKEN (`references/variants.md` § Resume).
 9. **Assembly + orchestrator layer.** Fill the settings of `<project>/assemble.sh` (first frame, end card, `TOTAL`,
    audio, flash time and center, iris time and center, paper and accent colors) and run `bash <project>/assemble.sh`:
    HeyGen assembler, transitions, then audio at the root, paper bed under the light world, light flash from the dark
    world into the light world, iris into the dark end card, and lint. `references/orchestrator-layer.md`.
-10. **Audio.** CC0 music from the user (`<project>/assets/audio/music.mp3`, volume 0.10 to 0.15), sound effects in
-    `<project>/assets/audio/sfx-events.json` placed on the visual events (format:
-    `.claude/skills/motion-design/templates/sfx-events.json`, names from `.claude/skills/media-use/audio/assets/sfx/`),
-    then `bash <project>/build-audio.sh && bash <project>/assemble.sh`.
+10. **Audio, in 3 or 4 music options.** Sound effects in `<project>/assets/audio/sfx-events.json` placed on the visual
+    events (format: `.claude/skills/motion-design/templates/sfx-events.json`, names from
+    `.claude/skills/media-use/audio/assets/sfx/`). CC0 tracks in `<project>/assets/music/` (sources:
+    `references/music.md`), drops found with `scripts/analyze-music.py --drop-at <flash time>`, then
+    `templates/build-music-options.py` copied into the project: music cut on the pivot with a low impact, drop on the
+    flash, ducked under the voice, -16 LUFS, one `mix-<id>.wav` per option with its pivot check. Then
+    `MIX=mix-M1.wav bash <project>/assemble.sh`. `references/music.md`.
 11. **Checks.** Lint clean (end of `assemble.sh`), `cd <project> && npx hyperframes check`, then
     `cd <project> && npx hyperframes snapshot --at <every frame midpoint, each cut -0.1 and +0.2>` and read
     `<project>/snapshots/contact-sheet.jpg`. Re-dispatch the frame concerned with the finding.
 12. **Render and real control.** `cd <project> && npx hyperframes render --quality high --output renders/video.mp4`,
     then `bash .claude/skills/motion-design/scripts/contact-sheets.sh <project>/renders/video.mp4` (black segments,
     exit 2 if any; sheets at 4 images/s in `<project>/renders/contact-sheets/`). Open every sheet, pass the grid again,
-    fix, re-assemble, re-render.
-13. **Delivery.** MP4 path, duration (`ffprobe`), contact sheets, frame ids for targeted revisions. For a landing page,
-    offer the silent loop (8 to 18 s) too.
+    fix, re-assemble, re-render. The other music options need no render:
+    `python3 <project>/build-music-options.py --mux <project>/renders/video.mp4`.
+13. **Delivery.** MP4 path per music option, duration (`ffprobe`), contact sheets, frame ids for targeted revisions.
+    For a website: web encode, poster, muted autoplay, framed player (`references/landing-integration.md`,
+    `templates/LaunchFilm.tsx`). Offer the silent loop (8 to 18 s) too.
+14. **Options, when asked for "better" or "other versions".** Same voice, same timings: a polished version, a restyle
+    that keeps the choreography, a new direction; recurring objects built first. `references/variants.md`.
 
 ## Control grid (storyboard, then render)
 
@@ -124,8 +133,11 @@ Read first, in this order, and follow them as your role:
 | `references/voice-elevenlabs.md` | step 3 |
 | `references/worker-dispatch.md` | steps 7 and 8 |
 | `references/orchestrator-layer.md` | step 9 |
+| `references/music.md` | step 10: pick, sync and mix the music options, commercial-safe CC0 sources |
+| `references/landing-integration.md` | step 13: put the film on a website |
+| `references/variants.md` | step 14, and to resume after a session cut |
 | `references/pitfalls.md` | before step 6, and whenever something looks wrong |
 | `patterns/PATTERNS.md` (repository root) | steps 1 and 6 (choose patterns), 11 and 12 (control) |
-| `templates/` | `frame.md`, `STORYBOARD.md`, `assemble.sh`, `build-audio.sh`, `sfx-events.json` |
-| `scripts/` | `onsets.py` (timings), `contact-sheets.sh` (render control), `waveform.py` (real voice envelope) |
+| `templates/` | `frame.md`, `STORYBOARD.md`, `assemble.sh`, `build-audio.sh`, `sfx-events.json`, `build-music-options.py`, `LaunchFilm.tsx` |
+| `scripts/` | `onsets.py` (timings), `analyze-music.py` (tempo, drops, sync), `contact-sheets.sh` (render control), `check-frames.py` (resume), `waveform.py` (real voice envelope) |
 | `.claude/skills/hyperframes-animation/blueprints-index.md`, `rules-index.md` | step 6: shot shapes and motion recipes |

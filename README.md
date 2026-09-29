@@ -77,13 +77,28 @@ voix, après le storyboard et après la première séquence.
 8. **L'assemblage et la couche orchestrateur.** Les scripts de HeyGen assemblent les séquences et leurs transitions,
    puis `assemble.sh` ajoute ce qu'aucune séquence ne peut faire seule : le fond papier sous tout le monde clair, le
    flash de lumière qui fait passer du problème à la solution, l'iris qui ouvre la carte de fin, et le son.
-9. **Le mixage audio.** `build-audio.sh` coupe la voix au milieu des silences (fondus de 5 ms), ajoute une musique sous
-   licence CC0 (domaine public) à 10 ou 15 % et les bruitages placés sur les événements à l'image (clic, pop, souffle).
+9. **Le mixage audio, en 4 options de musique.** `build-audio.sh` coupe la voix au milieu des silences (fondus de
+   5 ms). `analyze-music.py` lit chaque morceau comme un monteur (tempo, drops, montées, clair ou sombre) et dit à quel
+   moment le démarrer pour que son drop tombe sur le flash. `build-music-options.py` fabrique ensuite 3 ou 4 mixages
+   sur le même montage : musique coupée net sur le pivot avec un impact grave, drop calé sur le flash, musique qui
+   baisse sous la voix (compression déclenchée par la voix) et remonte dans les silences, fin en fondu, volume calibré
+   pour le web (-16 LUFS, l'unité du volume perçu). Il vérifie aussi que la musique n'écrase pas la voix au pivot. Morceaux en CC0 (domaine
+   public) uniquement, bruitages placés sur les événements à l'image (clic, pop, souffle).
 10. **Les contrôles.** Lint (la vérification automatique du code), `check` de HyperFrames, planches d'images autour de
     chaque coupe, puis la grille de contrôle des patterns.
 11. **Le rendu, puis le contrôle du vrai fichier.** Rendu MP4, puis `contact-sheets.sh` cherche les images noires et
     étale tout le film sur des planches de 4 images par seconde que Claude regarde une par une. Correction, nouveau
-    rendu, livraison.
+    rendu, livraison. Les autres musiques se posent sur le même rendu en quelques secondes, sans refaire la vidéo.
+12. **Les variantes.** Quand tu demandes « encore mieux » ou « d'autres versions » : plusieurs directions sur la même
+    voix et le même minutage, pour que chaque musique aille avec chaque image. Une version polie (ce que tu as
+    pointé, plus un pic plus fort), une restylisation qui garde la chorégraphie (par exemple tout en sombre), une
+    direction neuve (par exemple vue du dessus d'un bureau avec de vrais objets). Les objets qui reviennent d'une
+    séquence à l'autre sont construits d'abord, puis recopiés tels quels. Après une coupure de session,
+    `check-frames.py` repère les fichiers à moitié écrits avant de relancer.
+13. **Le film sur ton site.** Encodage web (environ 6 Mo, démarrage immédiat), affiche, lecture muette automatique
+    quand le film arrive à l'écran, bouton son qui relance au début, respect du réglage « moins d'animations », et un
+    cadre couleur d'accent bien visible autour du film (sur un fond de même couleur que le film, sans cadre, c'est
+    noir sur noir). Composant React prêt à l'emploi : `.claude/skills/motion-design/templates/LaunchFilm.tsx`.
 
 Détail complet pour l'agent : `.claude/skills/motion-design/SKILL.md` et son dossier `references/`.
 
@@ -142,9 +157,12 @@ propres fichiers d'exemple).
 - **Polices** : Instrument Sans, Space Mono et Big Shoulders, sur [Google Fonts](https://fonts.google.com), licence SIL
   Open Font License. Claude les télécharge dans chaque projet au bon format (commandes dans
   `.claude/skills/motion-design/references/method.md`). Tu peux aussi les récupérer à la main sur Google Fonts.
-- **Musique** : un morceau sous licence CC0 que tu choisis, par exemple chez
-  [HoliznaCC0](https://freemusicarchive.org/music/holiznacc0/) sur Free Music Archive. Vérifie la licence de chaque
-  morceau.
+- **Musique** : des morceaux sous licence CC0 (domaine public, usage commercial sans mention obligatoire), sur Free
+  Music Archive : [HoliznaCC0](https://freemusicarchive.org/music/holiznacc0/),
+  [Loyalty Freak Music](https://freemusicarchive.org/music/Loyalty_Freak_Music/) et
+  [Komiku](https://freemusicarchive.org/music/Komiku/) (seulement ses morceaux marqués CC0). Vérifie la licence sur la
+  page de chaque morceau. Les dix morceaux utilisés pour le devis, avec leurs liens, sont dans
+  `.claude/skills/motion-design/references/music.md`.
 - **Bruitages** : ceux fournis avec le skill `media-use` de HeyGen (Pixabay, licence Pixabay Content License).
 - **Logos d'outils** : [Simple Icons](https://simpleicons.org), fichiers en CC0 ; les logos restent des marques de
   leurs propriétaires.
@@ -159,6 +177,8 @@ Trois films faits avec cette méthode le même jour, pour la landing page d'Entr
 
 Chaque exemple contient sa charte `frame.md`, son `STORYBOARD.md` minuté mot par mot, ses séquences HTML, son `assemble.sh` et son `build-audio.sh`. Les voix, la musique, les bruitages et les polices ne sont pas inclus : pour refaire un rendu, dépose ta voix et suis `examples/README.md`.
 
+Le devis a ensuite été décliné en trois options sur la même voix, dans `examples/le-devis-options/` : « Poli » (la version en ligne sur le site, vidéo incluse : `poli/le-devis-poli.mp4`), « Nuit » (tout en sombre) et « Le bureau » (vue du dessus d'un bureau, vrais objets), avec les quatre musiques dans `poli/build-music-options.py`.
+
 ## Structure du dépôt
 
 - `README.md` : ce fichier.
@@ -168,10 +188,10 @@ Chaque exemple contient sa charte `frame.md`, son `STORYBOARD.md` minuté mot pa
 - `package.json` et `package-lock.json` : HyperFrames 0.8.82 figé.
 - `.env.example` : à copier en `.env` (vide, c'est voulu).
 - `.claude/settings.json` : télémétrie coupée.
-- `.claude/skills/motion-design/` : le skill de la méthode (`SKILL.md`, `references/`, `templates/`, `scripts/`).
+- `.claude/skills/motion-design/` : le skill de la méthode (`SKILL.md`, `references/` dont `music.md`, `variants.md` et `landing-integration.md`, `templates/` dont `build-music-options.py` et `LaunchFilm.tsx`, `scripts/` dont `analyze-music.py` et `check-frames.py`).
 - `.claude/skills/product-launch-video/` et 9 autres skills officiels HeyGen, audités et figés, avec leur licence.
 - `patterns/PATTERNS.md` : les patterns des 56 films et la grille de contrôle.
-- `examples/` : les trois films d'exemple (charte, storyboard, séquences, scripts d'assemblage et de son).
+- `examples/` : les trois films d'exemple (charte, storyboard, séquences, scripts d'assemblage et de son), et `examples/le-devis-options/` : les trois options du devis et ses quatre musiques.
 - `<ton-projet>/` : un dossier par film, créé par le skill.
 
 ## Crédits et licences

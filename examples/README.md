@@ -8,6 +8,38 @@ Trois films faits avec la méthode de ce dépôt, le 2026-09-28, pour la landing
 | `traduire/` | Traduire | 50 s | Pendant des décennies il fallait parler la langue de l'ordinateur (le code) et payer un traducteur ; aujourd'hui il parle français. |
 | `cette-video/` | Cette vidéo | 45 s | Le film parle de lui-même : un lecteur vidéo qui se contient à l'infini, un générique où tous les noms sont « aucun », la vraie onde de la voix. |
 
+## Les options du devis (nuit du 28 au 29 septembre 2026)
+
+Le devis a été retenu. Trois directions ont ensuite été faites sur **la même voix et le même minutage**, et quatre
+musiques sur ce même minutage : chaque musique va avec chaque image (méthode : `.claude/skills/motion-design/references/variants.md`
+et `music.md`).
+
+| Dossier | Option | Idée |
+| --- | --- | --- |
+| `le-devis-options/poli/` | 1, Poli | Le devis avec le personnage « toi » redessiné (mains sur la tête lisibles, sourcils inquiets, goutte de sueur) et « libre. » en pic, dans une pastille géante pendant que le devis barré s'envole. C'est la version en ligne sur le site, avec la musique M1 : `le-devis-options/poli/le-devis-poli.mp4` (encodage web, 5,6 Mo). |
+| `le-devis-options/nuit/` | 2, Nuit | Le même film tout en sombre : la solution sur une « nuit chaude » éclairée en terracotta, cartes en verre chaud, pas de fond papier, flash chaud. Fait pour se fondre dans le haut sombre d'une page. |
+| `le-devis-options/bureau/` | 3, Le bureau | Une direction neuve : le film vu du dessus d'un bureau, avec de vrais objets (devis papier, stylo terracotta, post-it déchiré, tampon SUR DEVIS, éphéméride, pile de factures, portable, carnet où le zéro est dessiné). |
+
+Les quatre musiques (M1 tic-tac puis élan, M2 rétro synthé, M3 montée électro, M4 cinéma) sont construites par
+`le-devis-options/poli/build-music-options.py` : musique coupée net sur « Stop. » avec un impact grave, drop calé sur le
+flash, musique qui baisse sous la voix, fin en fondu, -16 LUFS. Les dix morceaux sont en CC0 (domaine public) ; leurs
+liens de téléchargement sont dans `.claude/skills/motion-design/references/music.md`.
+
+Pour refaire une option :
+
+1. Fabrique le montage de la voix avec `le-devis/build-audio.sh` (voir plus bas), puis les mixages :
+   `MUSIC_DIR=/chemin/vers/les/morceaux python3 le-devis-options/poli/build-music-options.py` (écrit
+   `assets/audio/mix-C-M1.wav` à `mix-C-M4.wav` dans `poli/` ; `SFX_DIR` prend par défaut les bruitages du skill
+   `media-use`).
+2. Copie le mixage voulu dans le dossier de l'option (`nuit/assets/audio/`, `bureau/assets/audio/`) et les polices dans
+   `assets/fonts/`.
+3. Depuis le dossier de l'option : `MIX=mix-C-M1.wav ./assemble.sh`, puis le rendu comme ci-dessous.
+4. Pour les autres musiques, pas besoin de refaire le rendu :
+   `ffmpeg -i film.mp4 -i assets/audio/mix-C-M2.wav -map 0:v -map 1:a -c:v copy -c:a aac -b:a 192k film-M2.mp4`.
+
+Seule la vidéo de l'option Poli est incluse. La direction Bureau pèse lourd au rendu (69 Mo pour 43 s, à cause du bois
+et du grain) : à ré-encoder pour le web avant de la mettre sur un site (`.claude/skills/motion-design/references/landing-integration.md`).
+
 Chaque dossier contient :
 
 - `frame.md` : la charte (couleurs par rôle, typographie, composants, interdits).

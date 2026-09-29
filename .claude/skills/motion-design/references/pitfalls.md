@@ -33,6 +33,13 @@ Found while making the example films with this exact stack (HyperFrames 0.8.82, 
   method disables captions and shows the sentence itself, word by word: the dispatch template says so explicitly.
 - **CSS `transform` on an element that GSAP moves** is silently overwritten (the centering jumps). Center with margins
   or `xPercent` / `yPercent`.
+- **GSAP does not interpolate a `clip-path: polygon()` with many points** (a torn edge, a crumpled sheet): it swaps
+  the long string at the end of the tween instead of morphing it. Compute the polygon yourself: tween a proxy value
+  from 0 to 1 and, in its setter, interpolate every point between the two shapes and write `el.style.clipPath` at each
+  frame (the same number of points in both shapes).
+- **A camera pull-back that lasts too long** keeps the enlarged object over the phrase band while its words are being
+  written: the first words land under the object. End the pull-back before the first word cue of the phrase, or keep
+  the phrase on a layer above the camera that never scales.
 
 ## Assembly and transitions
 
@@ -55,6 +62,15 @@ Found while making the example films with this exact stack (HyperFrames 0.8.82, 
   `assemble.sh`.
 - **A frame marked `animated` without its HTML file** stops the assembler. `assemble.sh` marks a frame animated only
   when its file exists, so a pilot or a partial build assembles.
+
+## Sound
+
+- **The music must not crush the voice at the pivot.** It is the moment where a build peaks, and where it most often
+  covers the voice. Measure it: 8 dB or more between the voice and the music in the 1.5 s before the pivot, the bass
+  (under 150 Hz) near silence between the pivot and the flash. `build-music-options.py` prints both (`music.md`).
+- **`alimiter` has a make-up gain on by default** (`level`): after `loudnorm`, it pushes the peaks back near 0 dBFS
+  and the film ends above -1.5 dBTP. Use `alimiter=limit=0.79:level=disabled`, and measure with
+  `ffmpeg -i mix.wav -af ebur128=peak=true -f null -`.
 
 ## Checks
 
@@ -79,3 +95,7 @@ Found while making the example films with this exact stack (HyperFrames 0.8.82, 
 - No browser autoplays a video with sound: the top-of-page video is muted and must read without sound. Offer a silent
   loop of 8 to 18 s (MP4 H.264, 3 to 4 MB, no audio track, with a poster image) plus the full version with the voice,
   opened on click.
+- **A textured direction weighs a lot.** Wood grain, film grain and paper textures change at every pixel and every
+  frame: the desk variant rendered at 69 MB for 43 s, three times the flat one (21 MB). Never put a render on a site as
+  is: re-encode it for the web (`landing-integration.md`; the flat film weighs 5.6 MB at `-crf 24`), and check the
+  grain did not turn to mush (lower the `-crf` a little if it did).

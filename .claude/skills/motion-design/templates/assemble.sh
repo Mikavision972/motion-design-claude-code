@@ -16,7 +16,7 @@ export HYPERFRAMES_NO_TELEMETRY=1 DO_NOT_TRACK=1 HYPERFRAMES_SKIP_SKILLS=1 HYPER
 FIRST_FRAME="01-hook"      # id of the first frame (basename of its src, without .html)
 END_CARD="09-fin"          # id of the end card frame (the iris opens it)
 TOTAL="45.0"               # final duration = STORYBOARD duration = TOTAL in build-audio.sh
-AUDIO="assets/audio/mix.wav"   # mix built by build-audio.sh (empty = silent video)
+AUDIO="assets/audio/${MIX:-mix.wav}"   # mix from build-audio.sh or build-music-options.py (MIX=mix-M2.wav bash assemble.sh); empty = silent
 
 # Light flash, dark world -> light world (empty LEAK_AT = no flash). The flash covers the screen from
 # LEAK_AT+0.15 to LEAK_AT+0.30: put the cut between the last dark frame and the first light frame at LEAK_AT+0.25.
@@ -173,7 +173,8 @@ if iris_at is not None:
     t = lambda d: round(iris_at + d, 3)
     card = env["END_CARD"]
     tl += f'''        tl.fromTo("#el-{card}", {{ clipPath: "circle(0% at {ix}px {iy}px)" }}, {{ clipPath: "circle(160% at {ix}px {iy}px)", duration: 0.75, ease: "power2.inOut", immediateRender: false }}, {t(0.05)});
-        tl.fromTo("#fxiris-ring", {{ attr: {{ r: 0 }}, opacity: 0 }}, {{ attr: {{ r: 2492 }}, opacity: 1, duration: 0.75, ease: "power2.inOut", immediateRender: false }}, {t(0.05)});
+        tl.fromTo("#fxiris-ring", {{ attr: {{ r: 0 }} }}, {{ attr: {{ r: 2492 }}, duration: 0.75, ease: "power2.inOut", immediateRender: false }}, {t(0.05)});
+        tl.fromTo("#fxiris-ring", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.08, immediateRender: false }}, {t(0.05)});
         tl.to("#fxiris-ring", {{ opacity: 0, duration: 0.15 }}, {t(0.70)});
 '''
 anchor = re.search(r"(?m)^[ \t]*tl\.to\(\{\}, \{ duration: [0-9.]+ \}, 0\);", s)

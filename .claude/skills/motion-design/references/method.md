@@ -162,6 +162,17 @@ It rebuilds `index.html` with HeyGen's assembler and transition injector, then a
 bash <project>/build-audio.sh && bash <project>/assemble.sh
 ```
 
+That gives one simple mix. For the final film, build **3 or 4 music options** on the same edit (music cut on the
+pivot with a low impact, drop on the flash, ducked under the voice, -16 LUFS), each with its pivot check:
+
+```bash
+python3 .claude/skills/motion-design/scripts/analyze-music.py <project>/assets/music/*.mp3 --drop-at <flash time>
+cp .claude/skills/motion-design/templates/build-music-options.py <project>/
+python3 <project>/build-music-options.py && MIX=mix-M1.wav bash <project>/assemble.sh
+```
+
+Where to find commercial-safe tracks, the edit in detail and the checks: `music.md`.
+
 ## 11. Checks before the render
 
 ```bash
@@ -193,5 +204,8 @@ python3 .claude/skills/motion-design/scripts/waveform.py <project>/assets/audio/
 ## 13. Delivery
 
 Give the MP4 path, its duration (`ffprobe -v error -show_entries format=duration -of csv=p=0 <project>/renders/video.mp4`),
-the contact sheets and the frame ids, so the next revision can target one frame. For a landing page, also offer the
-silent loop (8 to 18 s, no audio track, readable without sound) cut from the same project.
+the contact sheets and the frame ids, so the next revision can target one frame. Swap the other music options into
+the same render (`python3 <project>/build-music-options.py --mux <project>/renders/video.mp4`) and deliver one MP4 per
+option. For a website: web encode, poster, muted autoplay and a framed player (`landing-integration.md`); also offer
+the silent loop (8 to 18 s, no audio track, readable without sound) cut from the same project. When the user asks for
+other versions: `variants.md`.

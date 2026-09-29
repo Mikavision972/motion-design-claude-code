@@ -1,6 +1,6 @@
 ---
 version: 2
-name: Entrepreneurs 2.0 — Launch Frame v4 (patterns 1600.agency)
+name: Entrepreneurs 2.0, Launch Frame v4 (patterns 1600.agency)
 description: >
   Video-first frame spec for the Entrepreneurs 2.0 landing-page motion design, rebuilt on the patterns mined from 56
   viral SaaS motion designs (patterns/PATTERNS.md). Two worlds: the PROBLEM lives on a warm
@@ -45,14 +45,14 @@ typography:
 
 components:
   ground-dark:
-    background: "solid canvas + 1–2 soft radial terracotta halos (14–28% opacity, blur 100px+) behind the focal element + static film grain 4–6%"
+    background: "solid canvas + 1-2 soft radial terracotta halos (14-28% opacity, blur 100px+) behind the focal element + static film grain 4-6%"
   ground-light:
-    background: "solid paper + one very soft warm radial (accent at 6–10%) behind the focal element + grain 3%. Text is ink-dark."
+    background: "solid paper + one very soft warm radial (accent at 6-10%) behind the focal element + grain 3%. Text is ink-dark."
   word-by-word:
     rule: "Each word of the phrase appears ON its voice timestamp: fromTo {opacity:0, y:10, filter:blur(8px)} → {opacity:1, y:0, blur(0)} in 0.3 s power3.out. Never the whole sentence at once."
   accent-pill (THE highlight mechanism, one per sentence):
     look: "filled accent rectangle, radius 12px, padding 0.06em 0.32em, text white (on dark) or white (on light), same font as the phrase"
-    motion: "the pill traces first: scaleX 0→1 from the left in 0.28 s power3.out (optionally starting at rotation -8deg and straightening to 0 in 0.4 s), THEN the word's letters write inside with a 0.02 s stagger. Starts 0–2 frames before the word is spoken."
+    motion: "the pill traces first: scaleX 0→1 from the left in 0.28 s power3.out (optionally starting at rotation -8deg and straightening to 0 in 0.4 s), THEN the word's letters write inside with a 0.02 s stagger. Starts 0-2 frames before the word is spoken."
     rule: "ONE pill per sentence, on the word the storyboard names. No other colored text anywhere."
   giant-word:
     motion: "enters with its tracking tightening from 0.35em to -0.05em + opacity 0→1 + blur 12px→0 over 0.5 s expo.out; may sit behind a card/object (z-order) for depth. NEVER tween letterSpacing (it snaps to device pixels under seek capture and the lint blocks it): keep letter-spacing -0.05em static, split the word into inline-block letters, and tween each letter's x from (i - (n-1)/2) × 0.4em to 0. A counting number keeps only scale + blur."
@@ -93,7 +93,7 @@ negative:
   - "No visible text that is not listed in the frame's Scene lines."
 ---
 
-# Entrepreneurs 2.0 — frame spec v4
+# Entrepreneurs 2.0, frame spec v4
 
 The film has two worlds. **The problem** plays on the warm black stage: the quote that fills up, the automation that breaks,
 the provider who never answers, the entrepreneur buried under his pain pills. A single **« Stop. »** freezes everything, then

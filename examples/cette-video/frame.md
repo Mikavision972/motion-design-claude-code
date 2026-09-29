@@ -1,6 +1,6 @@
 ---
 version: 2
-name: Entrepreneurs 2.0 — Launch Frame « Cette vidéo » (patterns 1600.agency)
+name: Entrepreneurs 2.0, Launch Frame « Cette vidéo » (patterns 1600.agency)
 description: >
   Video-first frame spec for the Entrepreneurs 2.0 motion design A « Cette vidéo », same system as C « Le devis » and
   B « Traduire » (examples/traduire/frame.md), built on patterns/PATTERNS.md. The film
@@ -47,14 +47,14 @@ typography:
 
 components:
   ground-dark:
-    background: "solid canvas + 1–2 soft radial terracotta halos (14–28% opacity, blur 100px+) behind the focal element + static film grain 4–6%"
+    background: "solid canvas + 1-2 soft radial terracotta halos (14-28% opacity, blur 100px+) behind the focal element + static film grain 4-6%"
   ground-light:
-    background: "solid paper + one very soft warm radial (accent at 6–10%) behind the focal element + grain 3%. Text is ink-dark."
+    background: "solid paper + one very soft warm radial (accent at 6-10%) behind the focal element + grain 3%. Text is ink-dark."
   word-by-word:
     rule: "Each word of the phrase appears ON its voice timestamp: fromTo {opacity:0, y:10, filter:blur(8px)} → {opacity:1, y:0, blur(0)} in 0.3 s power3.out. Never the whole sentence at once."
   accent-pill (THE highlight mechanism, one per sentence):
     look: "filled accent rectangle, radius 12px, padding 0.06em 0.32em, text white, same font as the phrase"
-    motion: "the pill traces first: scaleX 0→1 from the left in 0.28 s power3.out (optionally starting at rotation -8deg and straightening to 0 in 0.4 s), THEN the word's letters write inside with a 0.02 s stagger. Starts 0–2 frames before the word is spoken."
+    motion: "the pill traces first: scaleX 0→1 from the left in 0.28 s power3.out (optionally starting at rotation -8deg and straightening to 0 in 0.4 s), THEN the word's letters write inside with a 0.02 s stagger. Starts 0-2 frames before the word is spoken."
     rule: "ONE pill per sentence, on the word the storyboard names. No other colored text anywhere (code keywords inside a code window are the only exception)."
   giant-word:
     motion: "enters with its tracking tightening from 0.35em to -0.05em + opacity 0→1 + blur 12px→0 over 0.5 s expo.out. NEVER tween letterSpacing (it snaps to device pixels under seek capture and the lint blocks it): keep letter-spacing -0.05em static, split the word into inline-block letters and tween each letter's x from (i - (n-1)/2) × 0.4em to 0. A counting number keeps only scale + blur."
@@ -71,7 +71,7 @@ components:
   persona-traducteur (the translator, i.e. the developer / agency / provider):
     description: "The same flat style as persona-toi but distinguishable: short hair #6b5a4c, round glasses (2 thin ink circles), a headset arc, shirt #4a3f36, holding a small laptop. Neutral, never a caricature: the message is not against developers."
   computer:
-    description: "A simple flat monitor in inline SVG (rounded dark screen 300×200 inside a #2e2924 bezel, small stand); its screen shows 3–5 short code lines in the 'code' style scaled down."
+    description: "A simple flat monitor in inline SVG (rounded dark screen 300×200 inside a #2e2924 bezel, small stand); its screen shows 3-5 short code lines in the 'code' style scaled down."
   speech-bubble:
     description: "rounded card-light bubble (radius 22px, tail toward the speaker) with ui text in ink-dark; on the dark world it keeps its light fill (it is the user's words)."
   id-card (role cards):
@@ -85,7 +85,7 @@ components:
   prompt-card:
     description: "card-light 520×170: a numbered accent disc (40px, white Space Mono digit) + micro label + one ui line of example text."
   learning-path:
-    description: "a horizontal path: a 4px ink-dark line with 5 stations (48px discs, card-light fill, 3px ink-dark border, Space Mono digit 0–4 inside). Station 0 is the start: accent fill, white digit, a soft accent glow, and a micro pin label 'TU ES ICI' above it."
+    description: "a horizontal path: a 4px ink-dark line with 5 stations (48px discs, card-light fill, 3px ink-dark border, Space Mono digit 0-4 inside). Station 0 is the start: accent fill, white digit, a soft accent glow, and a micro pin label 'TU ES ICI' above it."
   cursor:
     description: "White macOS arrow with dark outline + drop shadow; click = press (scale .85) + accent ripple ring that expands and fades."
   video-player (the film itself):
@@ -113,7 +113,7 @@ negative:
   - "Never tween letterSpacing."
 ---
 
-# Entrepreneurs 2.0 — frame spec « Cette vidéo »
+# Entrepreneurs 2.0, frame spec « Cette vidéo »
 
 The film is about itself. It opens as a video that contains itself (a player inside a player inside a player), then
 rolls its own credits on the black stage: no agency, no motion designer, no studio, and the voice is not an actor
