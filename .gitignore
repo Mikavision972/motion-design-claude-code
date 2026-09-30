@@ -2,6 +2,10 @@ node_modules/
 .env
 */renders/
 */snapshots/
+examples/*/renders/
+examples/*/snapshots/
+examples/*/*/renders/
+examples/*/*/snapshots/
 .hyperframes/
 *.wav
 *.mp3

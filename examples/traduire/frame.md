@@ -1,6 +1,6 @@
 ---
 version: 2
-name: Entrepreneurs 2.0, Launch Frame « Traduire » (patterns 1600.agency)
+name: Entrepreneurs 2.0, Launch Frame « Traduire » (agency motion design patterns)
 description: >
   Video-first frame spec for the Entrepreneurs 2.0 motion design B « Traduire », same system as C « Le devis »
   (examples/le-devis/frame.md) and built on patterns/PATTERNS.md. The metaphor is

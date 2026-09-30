@@ -42,6 +42,6 @@ La copie n'est pas identique à l'amont : elle a été durcie pendant l'audit du
 
 Les vidéos d'exemple contiennent une voix générée sur ElevenLabs (forfait payant, usage commercial), des bruitages Pixabay (Pixabay Content License) et, pour `examples/le-devis-options/poli/le-devis-poli.mp4`, deux morceaux en CC0 1.0 : « Waiting TTTT » de Loyalty Freak Music et « Dear Mr Super Computer » de HoliznaCC0 (freemusicarchive.org). Pour `examples/le-devis/le-devis.mp4`, la musique est « Night Life » de HoliznaCC0, en CC0 1.0 également. La mention est facultative en CC0, elle est donnée par courtoisie.
 
-## Patterns (`patterns/PATTERNS.md`)
+## Patterns (`patterns/PATTERNS.md`, `patterns/STORYBOARD-CRAFT.md`)
 
-Texte original tiré de l'analyse image par image de 56 films du portfolio public de l'agence 1600.agency (https://www.1600.agency/portfolio). Aucune image ni vidéo n'est reproduite ici : les films appartiennent à leurs auteurs, les noms cités sont ceux des marques clientes, qui appartiennent à leurs propriétaires. Ce dépôt n'est affilié ni à 1600.agency, ni à HeyGen, ni à ElevenLabs.
+Synthèse originale de la grammaire et des patterns du motion design d'agence, sur lesquels on a beaucoup travaillé. Aucune image ni vidéo tierce n'est reproduite ici. Les noms cités en exemple sont ceux de marques dont les films de lancement sont publics : ces films appartiennent à leurs auteurs, les marques à leurs propriétaires. Ce dépôt n'est affilié ni à ces marques, ni à HeyGen, ni à ElevenLabs.

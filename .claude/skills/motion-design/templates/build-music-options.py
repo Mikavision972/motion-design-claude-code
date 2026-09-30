@@ -105,7 +105,7 @@ def build(oid):
                   f"afade=t=out:st={RISER_LEN - 0.03:.3f}:d=0.03,volume={opt['riser']},adelay={ms}|{ms},apad=whole_dur={DUR}[mr]")
         bus.append("[mr]")
         idx += 1
-    fc.append("".join(bus) + f"amix=inputs={len(bus)}:normalize=0:duration=longest[mbus]")
+    fc.append("".join(bus) + f"amix=inputs={len(bus)}:normalize=0:duration=longest,asplit=2[mbus][mraw]")
     fc.append(f"[mbus][vsc]sidechaincompress={DUCK}[mduck]")
     fc.append("[mduck]asplit=2[mmix][mcheck]")
     labels = ["[v]", "[mmix]"]
@@ -119,13 +119,16 @@ def build(oid):
     fc.append("".join(labels) + f"amix=inputs={len(labels)}:normalize=0:duration=first,atrim=0:{DUR},"
               f"loudnorm={LOUDNESS},alimiter=limit={LIMIT}:level=disabled[out]")
     out = path(OUT.format(id=oid))
-    music_only = out.replace(".wav", ".music-only.wav")
+    music_only = out.replace(".wav", ".music-only.wav")   # music after ducking (pivot check)
+    music_raw = out.replace(".wav", ".music-raw.wav")     # music before ducking (tension against elan)
     cmd = ["ffmpeg", "-v", "error", "-y"] + inputs + ["-filter_complex", ";".join(fc),
-           "-map", "[out]", "-ar", "44100", "-t", str(DUR), out, "-map", "[mcheck]", "-t", str(DUR), music_only]
+           "-map", "[out]", "-ar", "44100", "-t", str(DUR), out, "-map", "[mcheck]", "-t", str(DUR), music_only,
+           "-map", "[mraw]", "-t", str(DUR), music_raw]
     subprocess.run(cmd, check=True)
     print(f"{oid} ({opt['name']}) -> {out}")
-    check(out, music_only)
+    check(out, music_only, music_raw)
     os.remove(music_only)
+    os.remove(music_raw)
     return out
 
 
@@ -138,9 +141,19 @@ def level(f, start, end, lowpass=None):
     return float(m.group(1)) if m and m.group(1) != "-inf" else -120.0
 
 
-def check(mix, music_only):
+def loudness(f, start, end):
+    """Integrated loudness (LUFS) of a window."""
+    err = subprocess.run(["ffmpeg", "-v", "info", "-nostats", "-i", f, "-af",
+                          f"atrim={max(start, 0):.3f}:{end:.3f},ebur128", "-f", "null", "-"],
+                         capture_output=True, text=True).stderr
+    found = re.findall(r"I:\s+(-?[0-9.]+) LUFS", err)
+    return float(found[-1]) if found else -70.0
+
+
+def check(mix, music_only, music_raw):
     """The pivot must be heard: bass gone between PIVOT and LIGHT (except the impact), back after the flash, and the
-    music well under the voice just before the pivot."""
+    music well under the voice just before the pivot. The tension must not sit far under the elan: taken from a sparse
+    intro, 10 dB under, it made the start of a film feel soft; keep it 2 to 3 dB under at most."""
     before = level(mix, PIVOT - 1.0, PIVOT - 0.05, 150)
     gap = level(music_only, PIVOT + 0.05, LIGHT - 0.02, 150)
     after = level(mix, LIGHT + 0.1, LIGHT + 1.1, 150)
@@ -148,6 +161,10 @@ def check(mix, music_only):
     music = level(music_only, PIVOT - 1.5, PIVOT)
     print(f"   under 150 Hz: before the pivot {before:.1f} dB | music alone, pivot to flash {gap:.1f} dB | after the flash {after:.1f} dB")
     print(f"   1.5 s before the pivot: voice {voice:.1f} dB, music {music:.1f} dB (margin {voice - music:+.1f} dB)")
+    tension = loudness(music_raw, 0.0, PIVOT - RISER_LEN)
+    elan = loudness(music_raw, LIGHT, DUR - 3.0)
+    print(f"   music before ducking: tension {tension:.1f} LUFS, elan {elan:.1f} LUFS "
+          f"(tension {tension - elan:+.1f} dB, aim -3 to -2 dB)")
     if gap > -60:
         print("   warning: the music is not silent between the pivot and the flash")
     if voice - music < 8:

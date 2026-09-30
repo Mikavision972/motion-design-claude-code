@@ -46,8 +46,14 @@ exemple rempli.
 - **Coutures invisibles** : toutes les séquences s'enchaînent en `cut` ; la continuité est faite par la caméra : chaque
   couture tombe au sommet du flou d'un mouvement, et le `handoff_out` de la séquence N est recopié à l'identique dans le
   `handoff_in` de la séquence N+1. Exceptions voulues : <t, raison>.
-- **Texte** : la phrase de la voix, petite, mot par mot sur ses temps ; une pastille par phrase [pastille : …] ; 2 à 5
-  [géant : …] sur les pics. Aucun autre texte que celui des lignes Scene et des vraies interfaces.
+- **Texte** : la phrase de la voix en sous-titre en bas au centre (60 à 64 px, bande y 890 à 980 réservée), mot par
+  mot sur ses temps ; un mot clé par phrase dans une petite boîte à la couleur d'accent [boîte : …] ; 3 ou 4 pics
+  soulignés d'un trait fin sous LE mot clé [trait : …], jamais un mot géant ni un gros encadré ; 2 ou 3 moments
+  typographiques où la phrase est l'image, centrée, 84 px au plus. Aucun autre texte que celui des lignes Scene et des
+  vraies interfaces.
+- **Une seule chose à regarder** : la caméra isole le sujet de chaque phrase ; un zoom franc dans un seul sens, jamais
+  d'aller-retour ; mises en page côte à côte aux marges égales ; zéro décor sans sens, aucune ligne qui traverse une
+  phrase.
 - **Vraies interfaces** : <lesquelles, d'après quelle capture récente>.
 - **Grammaire de mouvement** : deux vitesses (gestes de 1 à 6 images, dérives linéaires permanentes) ; la zone 0,3 à
   0,9 s est réservée à la caméra et au curseur ; aucune tenue figée ; aucune transition « effet ».
@@ -60,7 +66,7 @@ exemple rempli.
 **SIGNATURES**
 - Mécanisme 1 « <nom> » : <t1, t2, t3, t4> (4 à 8 fois)
 - Mécanisme 2 « <nom> » : <…>
-- Registres de texte : petit mot à mot = <un mouvement> ; géant = <un mouvement> ; pastille = <un mouvement>
+- Registres de texte : sous-titre mot à mot = <un mouvement> ; boîte = <un mouvement> ; trait = <un mouvement> ; moment typographique = <un mouvement>
 - Rimes : <le geste de la fin (t) rejoue le geste du début (t)>
 
 **PARTITION CAMÉRA** (temps globaux) : <t type cible> · <t type cible> · …
@@ -96,7 +102,7 @@ exemple rempli.
 Word cues: <mot@0.00 mot@0.24 …> (temps locaux, depuis onsets.json : onsets.py --window <in> <out>)
 
 Scene <k> (<t> à <t> s) : P<numéro du plan dans le film>, <ce plan en quelques mots>
-  TEXTE ÉCRAN : <mots et leurs temps, [pastille : …], [géant : …]> ; écart <avance | synchro | aucun texte>
+  TEXTE ÉCRAN : <mots et leurs temps, [boîte : …], [trait : …]> ; écart <avance | synchro | aucun texte>
   IMAGE DE DÉPART : <ce qui est à l'image au début du plan : objets, échelle, position, fond> (ou « handoff_in »)
   ÉTAPES : <t> <élément> <propriété de → à>, <durée>, <courbe> ; <t + 0,5> … (jamais plus de 1 s sans événement,
            0,3 s dans les 3 premières secondes du film)
@@ -132,14 +138,16 @@ Rappel de la grille de `STORYBOARD-CRAFT.md` (section 5), à passer en entier av
   sur tout le film ;
 - au moins 3 verbes de la voix joués par un objet ; au moins la moitié des plans sur 3 niveaux (avant-plan flou, sujet
   net, fond) ;
-- la fin rejoue un geste du début (la rime), puis un curseur hésite et clique le seul bouton, 2 à 3 s de tenue vivante,
-  sortie au noir ou en iris.
+- la fin rejoue un geste du début (la rime), puis un curseur arrive d'un seul mouvement et clique directement le seul
+  bouton, 2 à 3 s de tenue vivante, sortie au noir ou en iris.
 
 ## 4. Exemple rempli (extrait court)
 
 Extrait de [`examples/C-le-devis-v7a/STORYBOARD.md`](../examples/C-le-devis-v7a/STORYBOARD.md), séquence 1 : les champs
 de la séquence et un seul de ses cinq plans (le plan 4, une seconde de film). Le décor est un devis de 1500 × 2120 u
-décrit au pixel dans `frame.md` ; D1 et D2 sont des états du devis définis dans la même charte.
+décrit au pixel dans `frame.md` ; D1 et D2 sont des états du devis définis dans la même charte. Ce film utilisait
+encore la pastille (`[pastille : …]`) ; le film final la remplace par la boîte d'accent du sous-titre (`[boîte : …]`) et
+le trait sous le mot-pic (`[trait : …]`) : voir [`examples/ligne-du-temps-v8/STORYBOARD.md`](../examples/ligne-du-temps-v8/STORYBOARD.md).
 
 ```
 ## Frame 1 : Le site, mille euros · 0.00 → 5.82

@@ -1,6 +1,6 @@
 ---
 version: 2
-name: Entrepreneurs 2.0, Launch Frame « Cette vidéo » (patterns 1600.agency)
+name: Entrepreneurs 2.0, Launch Frame « Cette vidéo » (agency motion design patterns)
 description: >
   Video-first frame spec for the Entrepreneurs 2.0 motion design A « Cette vidéo », same system as C « Le devis » and
   B « Traduire » (examples/traduire/frame.md), built on patterns/PATTERNS.md. The film

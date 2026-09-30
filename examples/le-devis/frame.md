@@ -1,6 +1,6 @@
 ---
 version: 2
-name: Entrepreneurs 2.0, Launch Frame v4 (patterns 1600.agency)
+name: Entrepreneurs 2.0, Launch Frame v4 (agency motion design patterns)
 description: >
   Video-first frame spec for the Entrepreneurs 2.0 landing-page motion design, rebuilt on the patterns mined from 56
   viral SaaS motion designs (patterns/PATTERNS.md). Two worlds: the PROBLEM lives on a warm

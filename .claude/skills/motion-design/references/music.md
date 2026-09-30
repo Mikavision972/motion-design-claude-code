@@ -8,10 +8,13 @@ user choose by ear, and swap the soundtrack of the rendered video without render
 The launch film has a pivot (a word alone such as « Stop. », or a silence) followed by the light flash into the
 solution. The music follows that shape:
 
-1. **Tension until the pivot.** A dark, regular pulse or a build that rises under the problem.
+1. **Tension until the pivot.** A dark, regular pulse or a build that rises under the problem, taken from a **full
+   section** of its track (not a sparse intro) and set **2 to 3 dB under the élan at most**: lower, the start of the
+   film feels soft.
 2. **Cut to silence on the pivot**, with a low impact (`impact-bass-1`) on the pivot word. A riser (`riser`, 10 s
    build that crests at its very end) can climb during the last 3 s and crest exactly there.
-3. **The drop lands on the light flash** (`LEAK_AT + 0.05` of `assemble.sh`), with `sparkle` and a soft `whoosh`.
+3. **The drop lands on the light** (the flash at `LEAK_AT + 0.05` of `assemble.sh`, or the first word of the
+   solution, « Aujourd'hui » in the flagship film), with `sparkle` and a soft `whoosh`.
 4. **Under the voice, not on it**: the music is ducked by the voice (`sidechaincompress`) and breathes back in the
    silences between sentences.
 5. **Fade out on the end card** (2.4 to 2.8 s), a `whoosh-cinematic` before the iris, a `chime` on the peak word.
@@ -55,7 +58,9 @@ MUSIC_DIR=<project>/assets/music python3 <project>/build-music-options.py --mux 
 
 It reuses the voice montage of `build-audio.sh` and the film's `sfx-events.json`, adds the pivot effects, writes
 `assets/audio/mix-<id>.wav` per option and prints a check (below). Starting gains: tension 0.34 to 0.42, elan 0.26 to
-0.30, piano 0.6 (a solo piano is quieter). `SFX_DIR` defaults to the Pixabay set of `media-use`.
+0.30, piano 0.6 (a solo piano is quieter); then set the tension gain from the measure below, not by ear. `SFX_DIR`
+defaults to the Pixabay set of `media-use`. The mix of the flagship film, with its four tension options, is
+`examples/ligne-du-temps-v8/build-audio-v8.py`.
 
 To render the film with one option: `MIX=mix-M1.wav` in `assemble.sh` (the audio path of the orchestrator layer), or
 keep one render and swap the soundtrack:
@@ -74,6 +79,10 @@ The script prints, for each option:
   middle value must be near silence (under -60 dB): if the bass keeps going, the pivot is not heard.
 - **voice against music** in the 1.5 s before the pivot: keep 8 dB or more. The pivot is where the music is the most
   tempting to push, and where it most often covers the voice.
+- **tension against élan**, music alone before ducking, in LUFS: the tension segment (0 to the riser) must sit 2 to 3
+  dB under the élan segment at most. On the flagship film it was 10 dB under (the sparse intro of its track) and the
+  first seconds felt soft; its four tension options, rebuilt from full sections, sit 2 dB under. Adjust the tension
+  segment (its track start, then its gain) rather than the élan.
 
 By hand, for any window:
 

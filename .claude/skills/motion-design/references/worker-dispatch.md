@@ -27,16 +27,20 @@ Frame-specific lines to add to the dispatch context when they apply:
   objects, light, text at the seam); they are binding for both workers: the first image of the frame is exactly its
   `handoff_in`, the last one exactly its `handoff_out`.
 - **Shared world**: when `frame.md` points to an executable reference (`reference/<world>.html`), add "Copy the CSS,
-  the template and the camera kit of reference/<world>.html verbatim (only `../assets/` becomes `assets/`)".
-- **Retry**: paste the lint or check findings that name the frame, verbatim.
+  the template, the camera kit and the decor build function of reference/<world>.html verbatim (only `../assets/`
+  becomes `assets/`, and the template ids take the prefix of this frame)". Frames that share a decor share the SAME
+  function: check it with the diff of `method.md` § 8 once the files exist.
+- **Retry**: resume the worker that built the frame (SendMessage) with the lint or check findings that name it,
+  verbatim, rather than dispatching a new one; it keeps its context and costs less. A new worker only if the first one
+  is gone.
 
 ## Pilot, then parallel
 
-1. **Pilot**: dispatch frame 1 alone. When its file exists, run `bash <project>/assemble.sh` (frames not built yet are
+1. **Pilot**: dispatch frame 1 alone, in the background. When its file exists, run `bash <project>/assemble.sh` (frames not built yet are
    skipped automatically, the orchestrator layer waits for the end card), then
    `cd <project> && npx hyperframes snapshot --at <3 or 4 moments of frame 1>` and show the contact sheet to the user.
    Fix the look now (in `frame.md` if it is a style issue, then re-dispatch the pilot) before building the rest.
-2. **Parallel**: dispatch every remaining frame at once, one worker each (in waves if the harness caps concurrency:
+2. **Parallel**: dispatch every remaining frame at once, one worker each, in the background (in waves if the harness caps concurrency:
    never merge two frames into one worker). A worker takes 8 to 30 minutes.
 3. **Wait on the files**: a frame is done when `<project>/compositions/frames/<frame_id>.html` exists and is a single
    `<template>...</template>`. A missing file after the worker returned: re-dispatch once with the same prompt.

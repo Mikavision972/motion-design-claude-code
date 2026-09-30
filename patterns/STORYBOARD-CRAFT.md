@@ -1,14 +1,14 @@
 ---
-titre: Grammaire de storyboard des motion designs 1600.agency
+titre: Grammaire de storyboard du motion design d'agence
 date: 2026-09-29
-sources: 6 storyboards à l'envers au dixième de seconde (Taapit 1101854162, Slack 900238637, Aikido 1037443707, Collective 1120306288, Calendly 942853428, lemlist 1201492792), storyboard à l'envers de la v6 du devis (non publié), patterns/PATTERNS.md
+sources: la grammaire et les patterns du motion design d'agence, sur lesquels on a beaucoup travaillé ; storyboard à l'envers de la v6 du devis (non publié) ; patterns/PATTERNS.md ; réglages retenus sur le film final (examples/ligne-du-temps-v8/)
 ---
 
-# Grammaire de storyboard (1600.agency)
+# Grammaire de storyboard du motion design d'agence
 
 `PATTERNS.md` dit **quoi** montrer (accroche, douleur, pivot, preuve, fin). Ce fichier dit **comment l'écrire** au dixième de seconde, pour qu'un agent l'anime en HTML/CSS/GSAP dans HyperFrames (le moteur qui rend une page HTML animée en vidéo) sans improviser la mise en scène. GSAP (GreenSock Animation Platform) est la bibliothèque d'animation JavaScript utilisée : `expo.out` décélère très fort, `power2.in` accélère, `back.out` dépasse puis revient, `none` est linéaire.
 
-Conventions : temps en secondes ; tailles en % de la hauteur (h) ou de la largeur (l) du cadre ; « V 10,54 » = mot dit à 10,54 s ; i/s = images par seconde (1 image = 0,033 s à 30 i/s, 0,04 s à 25 i/s). Tous les horodatages viennent des storyboards à l'envers de chaque film (fiches non publiées : les vidéos appartiennent à leurs auteurs ; portfolio public : https://www.1600.agency/portfolio ; ce dépôt n'est pas affilié à l'agence). La « v6 » est notre version du devis faite avant cette grammaire (non publiée) ; le même film refait avec elle est dans `examples/C-le-devis-v7a/`.
+Conventions : temps en secondes ; tailles en % de la hauteur (h) ou de la largeur (l) du cadre ; « V 10,54 » = mot dit à 10,54 s ; i/s = images par seconde (1 image = 0,033 s à 30 i/s, 0,04 s à 25 i/s). Les films de lancement cités en exemple, avec leurs temps, sont des films publics : ils appartiennent à leurs auteurs, aucune image ni vidéo n'en est reproduite ici, et ce dépôt n'est affilié à aucune des marques citées. La « v6 » est notre version du devis faite avant cette grammaire (non publiée) ; le même film refait avec elle est dans `examples/C-le-devis-v7a/`.
 
 ## 1. Les chiffres
 
@@ -27,9 +27,9 @@ Conventions : temps en secondes ; tailles en % de la hauteur (h) ou de la largeu
 ### 1.2 Ce qu'il faut en retenir
 
 - **Le rythme se compte en événements, pas en plans.** Aikido est le plus lent en plans (2,8 / 10 s) mais chaque plan contient 3 à 6 temps espacés de 0,5 à 1 s. Calendly, plan 1 : 5 événements en 1,1 s (curseur 0,13, caret 0,23, barre d'outils 0,40, traits 0,50, pop du O 1,07). La v6 est dans la norme en plans (4,6) mais 31 % de ses tranches de 0,1 s sont quasi immobiles et 20 % totalement immobiles. Règle : **un événement (arrivée, geste, clic, changement d'état, cran de caméra) toutes les 0,5 à 1 s au plus, toutes les 0,1 à 0,3 s dans l'accroche.**
-- **Le nombre de plans ne discrimine pas** : de 2,8 à 8,3 plans / 10 s pour six films notés 8 et plus. Ce qui manque à la v6, ce n'est pas des plans : ce sont des événements, de la caméra et de la profondeur.
+- **Le nombre de plans ne discrimine pas** : de 2,8 à 8,3 plans / 10 s pour six films de référence. Ce qui manque à la v6, ce n'est pas des plans : ce sont des événements, de la caméra et de la profondeur.
 - **Le tempo change avec l'acte** : Collective 9,3 plans / 10 s dans la douleur, 5,4 dans la solution ; Taapit 9,8 dans l'accroche. La v6 garde le même tempo (5,6 contre 5,0) : le soulagement ne se sent pas.
-- **La continuité se mesure en objets, pas en absence de coupe.** La v6 affiche 95 % de continu comme Aikido, mais 11 de ses 19 jonctions sont des effets (glissement, zoom-through, fondu flouté). Chez 1600, les effets purs sont 0 à 2 par film (Aikido 1 flou-fondu, Collective 2, Calendly zéro fondu enchaîné).
+- **La continuité se mesure en objets, pas en absence de coupe.** La v6 affiche 95 % de continu comme Aikido, mais 11 de ses 19 jonctions sont des effets (glissement, zoom-through, fondu flouté). Dans les films de référence, les effets purs sont 0 à 2 par film (Aikido 1 flou-fondu, Collective 2, Calendly zéro fondu enchaîné).
 - **Caméra fixe ne veut pas dire image fixe.** Quand la caméra ne bouge pas (Calendly, Slack), les objets portent le mouvement ou chaque plan atterrit. La v6 cumule caméra fixe et objets posés.
 - **Couches** : 2 à 4 animées en même temps, un seul élément « actif » (Calendly). La v6 tourne à 1,4.
 - **Les tenues longues existent** (Taapit écran partagé 8,7 s, Collective réseau 3,4 s, Calendly démo 5,1 s) mais elles sont placées là où il faut lire, et elles vivent.
@@ -264,9 +264,20 @@ Règle d'écriture : un plan qui révèle un objet sans passer par une signature
 tl.to('.bg',{filter:'blur(8px)',duration:.25},t).to('.hero',{filter:'blur(0px)',duration:.15},t);            // bascule de netteté
 ```
 
-### Loi 10. La fin rassemble le film, puis un curseur hésite et clique
+### Réglages retenus sur le film final, prioritaires sur les références
 
-**Énoncé.** La fin ramasse le film en un geste (implosion puis explosion, travelling dans le nuage des interfaces déjà vues, carte qui grandit depuis un point de fuite), puis un curseur entre en courbe, **hésite** (contact, recul, retour), clique avec un état pressé en 3 à 4 couleurs et une onde, et le film sort sans image figée (iris, noir, ou tenue qui vit).
+Issus des retours sur `examples/ligne-du-temps-v8/`. La liste complète, telle que le skill l'applique :
+`.claude/skills/motion-design/SKILL.md`, section « House rules ».
+
+- **La phrase de la voix se lit** : sous-titre en bas au centre (y ≈ 900), 60 à 64 px, ombre légère pour se détacher du fond, mot par mot ; jamais en haut à gauche. La bande basse reste libre d'éléments importants.
+- **Un seul geste à la fois dans une transition** : trop d'objets qui bougent en même temps perdent le spectateur. Une transition = une idée lisible en une seconde.
+- **Une seule chose à regarder à la fois** : la caméra isole le sujet de la phrase et ne montre l'ensemble qu'au moment où il a du sens. Un zoom franc dans un seul sens est bienvenu, jamais un aller-retour du décor.
+- **Les pics sont élégants, pas encadrés** : un trait fin ou un coup de pinceau effilé à la couleur d'accent sous LE mot clé, plutôt qu'une grosse pastille pleine ou un mot énorme ; jamais une ligne du décor qui traverse la phrase.
+- **Pas de tenue immobile d'une seconde** et pas de symbole abstrait qui ne dit rien (un compteur « J+1 096 → J+0 ») : chaque image illustre littéralement la phrase.
+
+### Loi 10. La fin rassemble le film, puis un curseur arrive et clique
+
+**Énoncé.** La fin ramasse le film en un geste (implosion puis explosion, travelling dans le nuage des interfaces déjà vues, carte qui grandit depuis un point de fuite), puis un curseur arrive d'un seul mouvement en courbe (0,4 à 0,5 s, `power3.out`), clique **directement** avec un état pressé en 3 à 4 couleurs et une onde, et le film sort sans image figée (iris, noir, ou tenue qui vit). Certaines références font hésiter le curseur (contact, recul, retour, chez Taapit) : c'est écarté ici, l'hésitation ralentit la fin.
 
 **Preuves.**
 - Aikido : implosion ×0,15 en 0,6 s `power3.in` (68,6 à 69,2), logo + 6 tuiles qui explosent en 0,3 s (69,24 à 69,5) ; curseur en courbe de 1 s à travers le logo (72,2 à 73,2), clic sur « done » (74,04), anneau puis iris noir (74,32 à 75,12).
@@ -278,15 +289,14 @@ tl.to('.bg',{filter:'blur(8px)',duration:.25},t).to('.hero',{filter:'blur(0px)',
 ```js
 tl.to('#lastScene',{scale:.15,duration:.6,ease:'power3.in'},T)                               // implosion
   .set('#endCard',{autoAlpha:1},T+.6)
-  .from('.tile',{x:0,y:0,scale:.3,rotation:()=>gsap.utils.random(-25,25),filter:'blur(10px)',
-                 duration:.3,ease:'power2.out',stagger:.02},T+.6);                            // explosion
-tl.to(cur,{keyframes:[                                                                        // hésitation
-    {x:bx+40,y:by+30,duration:.5,ease:'power3.out'}, {x:bx+4,y:by+2,duration:.2,ease:'power2.out'},
-    {x:bx+60,y:by+36,duration:.4,ease:'power2.out'}, {x:bx,y:by,duration:.3,ease:'power2.inOut'}]},T+1.2)
-  .to([cur,btn],{scale:.85,duration:.06,yoyo:true,repeat:1},T+3.1)                            // pression
+  .from('.tile',{x:0,y:0,scale:.3,rotation:i=>((i*37)%50)-25,filter:'blur(10px)',             // rotation tirée de l'index,
+                 duration:.3,ease:'power2.out',stagger:.02},T+.6);                            // jamais du hasard ; explosion
+tl.fromTo(cur,{x:bx+420},{x:bx,duration:.45,ease:'power3.out'},T+1.2)                       // un seul mouvement en courbe :
+  .fromTo(cur,{y:by+260},{y:by,duration:.45,ease:'power2.out'},T+1.2)                        // x et y sur deux courbes
+  .to([cur,btn],{scale:.85,duration:.06,yoyo:true,repeat:1},T+1.65)                           // clic direct : pression
   .to(btn,{keyframes:[{backgroundColor:ACC_PALE,duration:.03},{backgroundColor:'#fff',duration:.17},
-                      {backgroundColor:ACC,duration:.07}]},T+3.1)
-  .fromTo(fill,{scaleX:0},{scaleX:1,duration:.12,ease:'back.out(2)'},T+3.1);                  // bouton qui se remplit
+                      {backgroundColor:ACC,duration:.07}]},T+1.65)
+  .fromTo(fill,{scaleX:0},{scaleX:1,duration:.12,ease:'power3.out'},T+1.65);                  // bouton qui se remplit
 ```
 Carte de fin : 3 à 6 s, dont 2 à 3 s de tenue vivante après le clic (orbites, dérive, respiration), puis iris ou noir.
 
@@ -331,7 +341,7 @@ IMAGE CLÉ : <t> : <la vignette à dessiner, en une phrase>
 
 ### 3.3 Exemple rempli : Collective, plan 30
 
-Réécrit depuis le storyboard à l'envers de Collective (1120306288) comme il aurait dû être écrit avant l'animation. Le son n'a pas été relevé dans la fiche (seule la voix est minutée) et les libellés exacts des pilules non plus : la ligne SON et les libellés sont des propositions ; tout le reste est mesuré.
+Le plan 30 du film de Collective, écrit comme il aurait dû l'être avant l'animation. La ligne SON et les libellés exacts des pilules sont des propositions ; tout le reste suit le film.
 
 ```
 ### P30 · 33,3 → 37,5 (4,2 s) · solution
@@ -371,7 +381,7 @@ IMAGE CLÉ : 36,95 : carte coupée en bas, rangée de 4 pilules blanches sous le
 
 ## 4. Écart avec notre v6
 
-| Loi | Ce que fait 1600 | Ce que fait la v6 | À changer |
+| Loi | Ce que font les agences | Ce que fait la v6 | À changer |
 |---|---|---|---|
 | Rythme en événements | un événement toutes les 0,5 à 1 s ; douleur 9,3 contre solution 5,4 plans / 10 s (Collective) | 31 % des tranches de 0,1 s quasi immobiles ; tenues sans mouvement à 3,0 ; 4,1 ; 5,3 ; 15,2 (énergie 0,00) ; 24,5 ; 29,0 ; 37,3 (1 s) ; 41,8 (1,4 s) ; douleur 5,6 contre solution 5,0 | douleur à 8 ou 9 plans / 10 s ; plan 13 (20,6 à 26,0) resserré à un « TOI. » toutes les 1,2 s ; aucune fenêtre de 0,5 s immobile hors silence écrit |
 | 1. Monde et caméra | un monde parcouru (Aikido 0 à 25), dérive permanente + crans (Taapit) | caméra fixe ≈ 95 %, 5 mouvements (2,3 s cumulées) ; chaque frame peint son propre fond | un `#world` par acte : site, devis, frise, WhatsApp, écran verrouillé sur la même toile sombre ; Claude, site, devis sur le papier ; piste caméra écrite à part ; un cran par « TOI. » vers la ligne barrée |
@@ -383,7 +393,7 @@ IMAGE CLÉ : 36,95 : carte coupée en bas, rangée de 4 pilules blanches sous le
 | 7. Métaphore sur le verbe | « tombe », « file », « creuser », « trouver » joués à ± 0,1 s (Collective) | bons : « planté » (Make grise, 7,28), « libre » (le devis s'envole, 30,7), « zéro » (plongée, 36,15) ; muets : « expliques » (frappe à 2,5 % h), « servir » (comète de 2 px, 28,4), « technique » | « expliques » : cran ×1,8 dans le champ ; « t'en servir » : la pastille remplit le cadre avec une vraie traînée terracotta ; « relance » : chaque bulle tombe avec rebond |
 | 8. Signatures et rimes | 1 ou 2 mécanismes répétés 4 à 8 fois ; logo rejoué | pastille de texte tenue tout le film (bien) ; révélations d'objets toutes différentes ; logo une seule fois ; le bouton « JE PRENDS RENDEZ-VOUS » du site (19,83) et celui de la carte de fin (39,8) riment sans être joués pareil | signature d'objet : le cadre de sélection pointillé de 1,0 s, tracé par le curseur, révèle chaque objet (site, devis, frise, téléphone, fenêtre Claude, zéro) ; le bouton de fin apparaît avec le même anneau qu'à 19,83 |
 | 9. Profondeur | 3 niveaux, avant-plan flou, parallaxe 3:1, mot géant derrière un objet | 6 plans sur 20 à 2 niveaux, tous figés ; aucune parallaxe ; aucun mot géant derrière un objet | « Aujourd'hui, » derrière la fenêtre Claude ; « TOI. » devant le devis, sur la ligne qu'il barre ; panoramique de 8,65 en 2 niveaux (frise ×1, halo ×0,35) ; notifications qui passent devant la caméra, floues (12,6 à 13,55) |
-| 10. Fin | implosion ou travelling dans les UI ; curseur qui hésite ; bouton qui se remplit ; iris ou tenue vivante | plongée dans le zéro (36,15 à 36,95, le meilleur pont) ; puis carte de 6,3 s d'un bloc, logo seul 1 s, bouton non accent, clic sans hésitation (41,4), 1,4 s figée | après « pour de bon » : 1,5 s de travelling dans le nuage des UI du film ; curseur qui touche, recule, revient, clique vers 41,6 ; bouton qui se remplit de terracotta ; vagues qui dérivent jusqu'à 43,2 ou iris noir |
+| 10. Fin | implosion ou travelling dans les UI ; curseur qui arrive et clique ; bouton qui se remplit ; iris ou tenue vivante | plongée dans le zéro (36,15 à 36,95, le meilleur pont) ; puis carte de 6,3 s d'un bloc, logo seul 1 s, bouton non accent, clic sans hésitation (41,4), 1,4 s figée | après « pour de bon » : 1,5 s de travelling dans le nuage des UI du film ; curseur qui arrive en courbe et clique directement vers 41,6 ; bouton qui se remplit de terracotta ; vagues qui dérivent jusqu'à 43,2 ou iris noir |
 
 ## 5. Grille de contrôle d'un storyboard (avant d'animer)
 
@@ -401,4 +411,4 @@ IMAGE CLÉ : 36,95 : carte coupée en bas, rangée de 4 pilules blanches sous le
 12. Au moins la moitié des plans ont 3 niveaux (avant-plan flou, sujet net, fond), une parallaxe par acte au minimum, et chaque mot géant passe derrière ou devant un objet.
 13. Couches animées : régime courant ≥ 2, pic 3 à 4, un seul élément actif à la fois.
 14. Rime : le mécanisme du logo ou un objet de l'accroche est rejoué à l'identique avant la fin.
-15. Fin : un geste qui rassemble le film, un curseur en courbe qui hésite au moins 0,8 s puis clique (état pressé en 3 couleurs, onde), 2 à 3 s de tenue vivante, sortie en iris ou au noir.
+15. Fin : un geste qui rassemble le film, un curseur qui arrive en courbe et clique directement, sans hésitation (état pressé en 3 couleurs, onde), 2 à 3 s de tenue vivante, sortie en iris ou au noir.

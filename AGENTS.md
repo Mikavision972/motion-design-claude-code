@@ -24,7 +24,7 @@ for other kinds of video.
   it. If it is missing, recreate it before running any HeyGen script.
 - Every video project lives in its own folder at the repository root (`<project>/`), never deeper: the `.gitignore`
   rules for `renders/` and `snapshots/` expect that depth, and the project scripts reach the skills through
-  `../.claude/skills/`.
+  `../.claude/skills/`. Create it with `bash .claude/skills/motion-design/scripts/new-project.sh <project>`.
 - media-use: always `--local-only`; no generated background music (`--no-bgm` / `bgm: {"mode":"none"}`). The music
   is a CC0 track the user provides; sound effects come from `.claude/skills/media-use/audio/assets/sfx/`. No pip
   installs triggered by the HeyGen skills.
@@ -38,9 +38,10 @@ for other kinds of video.
 
 ## References
 
-- Method: `.claude/skills/motion-design/SKILL.md` and its `references/`
+- Method (5 steps, house rules, dispatch template): `.claude/skills/motion-design/SKILL.md` and its `references/`
+- The reference film, final result of the method: `examples/ligne-du-temps-v8/`
 - Patterns and control grid: `patterns/PATTERNS.md`
-- Storyboard grammar (10 laws, format, 15-point grid): `patterns/STORYBOARD-CRAFT.md`
+- Storyboard grammar (10 laws, retained settings, format, 15-point grid): `patterns/STORYBOARD-CRAFT.md`
 - Templates for the storyboard step: `templates/DIRECTIONS-TEMPLATE.md`, `templates/STORYBOARD-TEMPLATE.md`
-- A complete storyboard made with this method: `examples/C-le-devis-v7a/`
+- A complete storyboard step (directions, storyboard, checked grid): `examples/C-le-devis-v7a/`
 - Third-party notices: `THIRD_PARTY_NOTICES.md`

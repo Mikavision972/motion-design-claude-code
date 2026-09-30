@@ -17,9 +17,11 @@ Skeleton of the motion-design skill. Replace every {{...}} (grep -n "{{" STORYBO
 this comment, and keep the exact field names: HeyGen's packet builder, assembler and transition injector parse them,
 line by line (every "- key: value" field and the "Word cues:" line stay on ONE line, however long).
 What each line must contain, with a filled example: templates/STORYBOARD-TEMPLATE.md (repository root). Complete film
-written this way: examples/C-le-devis-v7a/STORYBOARD.md. Grammar and 15-point grid: patterns/STORYBOARD-CRAFT.md.
+written this way: examples/ligne-du-temps-v8/STORYBOARD.md (the flagship film) and examples/C-le-devis-v7a/STORYBOARD.md.
+Grammar and 15-point grid: patterns/STORYBOARD-CRAFT.md. House rules: .claude/skills/motion-design/SKILL.md.
 
-Timing rules (all times come from onsets.py run on the FINAL voice montage, never from Whisper alone):
+Timing rules (all times come from onsets.json, built on the FINAL voice montage by mots.py then onsets.py, never from
+Whisper alone):
 - A frame = one idea of the script, 3 to 6 s, built by one worker. Frame boundaries sit in the silences.
 - Sum of all frame durations = duration above = TOTAL in assemble.sh and build-audio.sh (check it with the script of
   method.md § 6, do not trust mental math).
@@ -40,12 +42,13 @@ Timing rules (all times come from onsets.py run on the FINAL voice montage, neve
 
 - **One world** (frame.md): {{THE_PLACE_THE_CAMERA_TRAVELS_THROUGH}}. Frames 1-{{LAST_DARK}} = PROBLEM in the dark world; frames {{FIRST_LIGHT}}-{{LAST_LIGHT}} = SOLUTION in the light world; frame {{END}} = END CARD back on the dark stage. Each frame paints its own full-bleed ground as a `class="clip"` layer.
 - **Invisible seams**: every frame enters with `cut`; each seam falls at the top of the blur of a camera move and the `handoff_out` of frame N is copied word for word into the `handoff_in` of frame N+1. Wanted exceptions: {{TIME_AND_REASON_OF_EACH_HARD_CUT}}.
-- **Text** (readable without sound): every sentence of the voice is shown as small `phrase` text that arrives WORD BY WORD on the timestamps given in each frame (`word@seconds`, frame-local). Exactly ONE word or group per sentence sits in the traced `accent-pill` (named in the Scene lines as [pill: …]). No other colored or glowing text.
-- **Giant words**: only the peaks named as [giant: …] ({{GIANT_WORDS}}, 2 to 5 in the whole film), arriving from the camera and settling, behind or in front of an object.
+- **Text** (readable without sound): every sentence of the voice is a `subtitle` at the bottom center (band y 890 to 980, nothing else in it) that arrives WORD BY WORD on the timestamps given in each frame (`word@seconds`, frame-local). Exactly ONE word or group per sentence sits in the `key-word-box` (named in the Scene lines as [boîte : …]). No other colored or glowing text. Typographic moments (the sentence IS the image, centered, 84 px at most): {{2_OR_3_MOMENTS}}.
+- **Peaks**: only the 3 or 4 peaks named as [trait : …] ({{PEAK_WORDS}}): a thin accent stroke or a tapered brush stroke under THE key word. No giant word, no big box.
+- **One thing to look at**: in every shot the camera isolates the subject of the sentence and shows the whole only when it makes sense; a clear zoom in one direction, never a back-and-forth; side-by-side layouts with equal margins; no decor without meaning, no line crossing a sentence.
 - **Real interfaces** (frame.md, from recent screenshots): {{REAL_INTERFACES}}. Uncluttered, the same device in the whole film.
 - **Motion grammar**: two speeds, gestures of 1 to 6 images (expo.out) and linear drifts that never stop; the 0.3 to 0.9 s range is kept for the camera and the cursor (expo, power3 or power4); elements arrive too big and blurred then settle, never faded in at their final size; no frozen hold (every hold names its living layer); no "effect" transition.
 - **Visible copy**: exactly the quoted copy of the Scene lines, nothing else.
-- **Negative list**: slideshow (everything at t=0), screensaver (many things floating), doubled object, colored text instead of the pill, big phrase text, any hue other than the accent except real interfaces and tool-tile brand colors.
+- **Negative list**: slideshow (everything at t=0), screensaver (many things floating), doubled object, colored text instead of the box, big sentence, giant word, abstract symbol, hesitating cursor, several objects moving during a seam, any hue other than the accent except real interfaces and tool-tile brand colors.
 
 **MONDE**
 - Acte {{n}} ({{t}} à {{t}}) : {{place}} ; stations {{name (x, y)}} ; fond {{color + texture that makes the drift visible}}
@@ -54,7 +57,7 @@ Timing rules (all times come from onsets.py run on the FINAL voice montage, neve
 **SIGNATURES**
 - Mécanisme 1 « {{name}} » : {{t1, t2, t3, t4}} (4 to 8 times)
 - Mécanisme 2 « {{name}} » : {{…}}
-- Registres de texte : {{small word by word: one motion ; giant: one motion ; pill: one motion}}
+- Registres de texte : {{subtitle word by word: one motion ; key-word box: one motion ; peak stroke: one motion ; typographic moment: one motion}}
 - Rimes : {{the gesture of the end (t) replays the gesture of the start (t)}}
 
 **PARTITION CAMÉRA** (global times) : {{t type target · t type target · …}}
@@ -80,13 +83,13 @@ Timing rules (all times come from onsets.py run on the FINAL voice montage, neve
 - focal: {{HERO_ELEMENT}}
 - rules: {{RULE_1}}, {{RULE_2}}
 - world: dark
-- handoff_in: aucun (ouverture du film) ; première image = {{WHAT_IS_ON_SCREEN_AT_0.00: the first word alone, never the logo}}
+- handoff_in: aucun (ouverture du film) ; première image = {{WHAT_IS_ON_SCREEN_AT_0.00: the first word or what it names, never the logo}}
 - handoff_out: à {{D1}} : {{cam(x, y, scale, rx, rz) blur px ; camera move in progress and its speed ; world state ; objects on screen with position and size ; light ; text ; grain}}
 
 Word cues: {{Word@0.00 word@0.24 word@0.78 ...}}
 
 Scene 1 (0.00 à {{t}} s) : P1, {{this shot in a few words}}
-  TEXTE ÉCRAN : « {{FIRST_WORD}} » alone at 0.00, then [pastille : {{KEY_WORD}}] at {{t}} ; écart {{avance | synchro | aucun texte}}
+  TEXTE ÉCRAN : subtitle « {{FIRST_WORDS}} » word by word from 0.00, [boîte : {{KEY_WORD}}] at {{t}} ; écart {{avance | synchro | aucun texte}}
   IMAGE DE DÉPART : handoff_in.
   ÉTAPES : {{t element property from → to, duration, curve ; t + 0.5 … (0.1 to 0.3 s apart in the hook)}}
   PISTE CAMÉRA : {{drift vector, %/s or u/s ; t à t move toward cam(…) curve, blur}}
@@ -125,7 +128,7 @@ of the start (the rhyme). -->
 
 ## Frame {{END}}: {{END_CARD_TITLE}} · {{IN_END}} → {{TOTAL}}
 
-- scene: Back on the dark stage: the wordmark assembles, « {{PROMISE}} » lands, a cursor hesitates then clicks « {{CTA_LABEL}} »
+- scene: Back on the dark stage: the wordmark assembles, « {{PROMISE}} » lands, a cursor arrives and clicks « {{CTA_LABEL}} » directly
 - duration: {{D_END}}s
 - transition_in: cut
 - status: outline
@@ -144,6 +147,6 @@ Word cues: {{...}} (hold to {{D_END}})
 Scene 1 (0.00 à {{t}} s) : P{{n}}, the wordmark
   ÉTAPES : dark stage with a soft accent texture across the top third and a warm halo; the wordmark « {{WORDMARK}} » falls in letter by letter on its cue (each letter ×1.4 and blurred, sharp in 0.12 s); {{an event every 0.5 s}}.
 Scene 2 ({{t}} à {{t}} s) : P{{n}}, the promise and the button
-  ÉTAPES : « {{PROMISE_START}} » + [pastille : {{PROMISE_END}}] on their cues; the sub-line « {{SUB_LINE}} » word by word; the CTA button « {{CTA_LABEL}} » arrives ×1.1 and blurred then settles, with the same ring as {{THE_BUTTON_EARLIER_IN_THE_FILM}} (the rhyme); mono URL « {{URL}} ».
+  ÉTAPES : « {{PROMISE_START}} » + [trait : {{PROMISE_END}}] on their cues; the sub-line « {{SUB_LINE}} » word by word; the CTA button « {{CTA_LABEL}} » arrives ×1.1 and blurred then settles, with the same ring as {{THE_BUTTON_EARLIER_IN_THE_FILM}} (the rhyme); mono URL « {{URL}} ».
 Scene 3 ({{t}} à {{D_END}} s) : P{{n}}, the click and the living hold
-  ÉTAPES : a cursor enters on a curve, touches the button, backs off, comes back and clicks (at least 0.8 s of hesitation); pressed state in 3 colors and a ripple, the button fills with the accent; then 2 to 3 s of living hold (drift, texture that moves), then {{black | iris}}. No frozen image.
+  ÉTAPES : a cursor arrives in ONE curved move (0.4 to 0.5 s power3.out) and clicks directly, no hesitation; pressed state in 3 colors and a ripple, the button fills with the accent; then 2 to 3 s of living hold (drift, texture that moves), then {{black | iris}}. No frozen image.

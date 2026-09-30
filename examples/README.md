@@ -1,8 +1,12 @@
 # Exemples
 
 Des films faits avec la méthode de ce dépôt pour la landing page d'[Entrepreneurs 2.0](https://entrepreneurs2-0.com) :
-trois films le 2026-09-28, les options du devis dans la nuit qui a suivi, puis le devis refait à partir d'un vrai
-storyboard le 2026-09-29 (`C-le-devis-v7a/`, plus bas).
+trois films le 2026-09-28, les options du devis dans la nuit qui a suivi, le devis refait à partir d'un vrai
+storyboard le 2026-09-29 (`C-le-devis-v7a/`, plus bas), puis le film final le 2026-09-30.
+
+**Le film phare, à imiter en premier** : [`ligne-du-temps-v8/`](ligne-du-temps-v8/), « La ligne du temps » (49,5 s),
+le résultat final de la méthode en 5 étapes, celui qui tourne en haut du site : charte, storyboard, code commun du
+décor, les 9 séquences, l'assemblage et le mix (détail et marche à suivre dans son `README.md`).
 
 | Dossier | Film | Durée | Idée |
 | --- | --- | --- | --- |
