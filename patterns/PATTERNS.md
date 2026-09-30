@@ -1,6 +1,6 @@
 # Patterns du motion design SaaS qui performe
 
-Bibliothèque des patterns du motion design d'agence, sur lesquels on a beaucoup travaillé : ceux des films de lancement
+Bibliothèque des patterns du motion design, ce qui ressort après avoir regardé pas mal de vidéos de motion design : ceux des films de lancement
 SaaS qui circulent le plus sur LinkedIn et X. Les marques citées en exemple sont celles de films de lancement publics ;
 elles appartiennent à leurs propriétaires, aucune image ni vidéo n'est reproduite ici, et ce dépôt n'est affilié à
 aucune d'elles.

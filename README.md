@@ -6,7 +6,7 @@ Claude, tu génères la voix, tu valides le storyboard sur image, puis Claude an
 la musique et les bruitages, et vérifie le tout avant de te le rendre.
 
 Tout ce qu'il faut est dans ce dépôt : la méthode sous forme de skill Claude Code, la grammaire de storyboard et les
-patterns du motion design d'agence, sur lesquels on a beaucoup travaillé, les modèles de directions, de charte et de
+patterns du motion design (ce qui ressort après avoir regardé pas mal de vidéos de motion design), les modèles de directions, de charte et de
 storyboard, les scripts de minutage, de projet et de contrôle, le film phare avec toutes ses séquences, d'autres films
 d'exemple, et les skills officiels HeyGen, audités et figés.
 
@@ -146,7 +146,7 @@ et son dossier `references/`.
 
 ## Les patterns et les réglages, en résumé
 
-La grammaire et les patterns du motion design d'agence, sur lesquels on a beaucoup travaillé, plus les réglages
+La grammaire et les patterns du motion design, ce qui ressort après avoir regardé pas mal de vidéos de motion design, plus les réglages
 retenus sur le film phare. Bibliothèque complète, recettes et grille de contrôle :
 [`patterns/PATTERNS.md`](patterns/PATTERNS.md). Comment écrire le storyboard au dixième de seconde (caméra,
 objets-ponts, profondeur, calage sur la voix, gabarit, grille en 15 points) :
@@ -275,8 +275,8 @@ Le devis a ensuite été décliné en trois options sur la même voix, dans `exa
   Colin Blain. Voir `LICENSE`.
 - **Skills HyperFrames** : © HeyGen, Inc., licence Apache 2.0, source https://github.com/heygen-com/hyperframes,
   copie du commit audité avec les modifications listées dans `THIRD_PARTY_NOTICES.md`.
-- **Patterns et grammaire de storyboard** : synthèse originale de la grammaire et des patterns du motion design
-  d'agence, sur lesquels on a beaucoup travaillé. Aucune image ni vidéo tierce reproduite ; les marques citées en
+- **Patterns et grammaire de storyboard** : synthèse originale de la grammaire et des patterns du motion design,
+  ce qui ressort après avoir regardé pas mal de vidéos de motion design. Aucune image ni vidéo tierce reproduite ; les marques citées en
   exemple appartiennent à leurs propriétaires.
 - **Polices** : SIL Open Font License. **Bruitages** : Pixabay Content License. **Logos** : Simple Icons (CC0),
   marques de leurs propriétaires. **Voix** : conditions d'ElevenLabs.

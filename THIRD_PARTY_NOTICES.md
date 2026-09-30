@@ -44,4 +44,4 @@ Les vidéos d'exemple contiennent une voix générée sur ElevenLabs (forfait pa
 
 ## Patterns (`patterns/PATTERNS.md`, `patterns/STORYBOARD-CRAFT.md`)
 
-Synthèse originale de la grammaire et des patterns du motion design d'agence, sur lesquels on a beaucoup travaillé. Aucune image ni vidéo tierce n'est reproduite ici. Les noms cités en exemple sont ceux de marques dont les films de lancement sont publics : ces films appartiennent à leurs auteurs, les marques à leurs propriétaires. Ce dépôt n'est affilié ni à ces marques, ni à HeyGen, ni à ElevenLabs.
+Synthèse originale : la grammaire et les patterns du motion design, ce qui ressort après avoir regardé pas mal de vidéos de motion design. Aucune image ni vidéo tierce n'est reproduite ici. Les noms cités en exemple sont ceux de marques dont les films de lancement sont publics : ces films appartiennent à leurs auteurs, les marques à leurs propriétaires. Ce dépôt n'est affilié ni à ces marques, ni à HeyGen, ni à ElevenLabs.

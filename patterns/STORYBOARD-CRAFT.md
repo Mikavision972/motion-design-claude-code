@@ -1,7 +1,7 @@
 ---
 titre: Grammaire de storyboard du motion design d'agence
 date: 2026-09-29
-sources: la grammaire et les patterns du motion design d'agence, sur lesquels on a beaucoup travaillé ; storyboard à l'envers de la v6 du devis (non publié) ; patterns/PATTERNS.md ; réglages retenus sur le film final (examples/ligne-du-temps-v8/)
+sources: la grammaire et les patterns du motion design, ce qui ressort après avoir regardé pas mal de vidéos de motion design ; storyboard à l'envers de la v6 du devis (non publié) ; patterns/PATTERNS.md ; réglages retenus sur le film final (examples/ligne-du-temps-v8/)
 ---
 
 # Grammaire de storyboard du motion design d'agence
