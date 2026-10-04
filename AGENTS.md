@@ -10,8 +10,15 @@ security audit (`.claude/skills/AUDITED_COMMIT.txt`, changes listed in `THIRD_PA
 for other kinds of video.
 
 **Cloud sessions** (Claude Code on the web): `.claude/hooks/session-start.sh` runs at every session start (npm ci,
-render browser, Python Playwright, empty `.env`, telemetry off, pinned versions and network checked) and prints a short
-summary. Act on its warnings; renders need `cdn.jsdelivr.net` allowed in the environment's network access.
+render browser, Python Playwright, openai-whisper and its models, empty `.env`, telemetry off, no key in the
+environment, pinned versions and network checked) and prints a short summary. Act on its warnings: renders need
+`cdn.jsdelivr.net` and the Whisper models need `openaipublic.azureedge.net` allowed in the environment's network access;
+never route around a blocked host.
+
+**Enforcement** (local and cloud): the `permissions.deny` rules of `.claude/settings.json` and the PreToolUse guard
+`.claude/hooks/guard.py` refuse the forbidden commands below whatever their spelling, `pip install` of anything but
+`openai-whisper` and `playwright`, and any HeyGen, HyperFrames, ElevenLabs, Gemini/Google or OpenRouter key written in a
+command or a file. A refusal is final: do not look for another spelling.
 
 ## Guardrails (from the audit, non-negotiable)
 
@@ -39,6 +46,9 @@ summary. Act on its warnings; renders need `cdn.jsdelivr.net` allowed in the env
   `HYPERFRAMES_NO_TELEMETRY=1 DO_NOT_TRACK=1 HYPERFRAMES_SKIP_SKILLS=1 HYPERFRAMES_NO_UPDATE_CHECK=1`.
 - Nothing leaves the machine: no upload of renders, no push, no publication, no API key requested. The voice is made
   by the user in the ElevenLabs web app; never ask for an ElevenLabs key and never store one in the repository.
+- Never put a HeyGen, HyperFrames, ElevenLabs, Gemini/Google or OpenRouter key in the environment: not in the cloud
+  environment variables, `.claude/settings.json`, `.env`, a shell `export`, nor any file of the repository.
+- `pip install` only `openai-whisper` and `playwright` (from PyPI, no requirements file, path, URL or other index).
 
 ## References
 
