@@ -56,6 +56,12 @@ les garde-fous se chargent. Puis demande par exemple :
 
 > Je veux un motion design de lancement de 45 secondes pour mon produit. Voici ma page : https://...
 
+**Dans Claude Code sur le web** (session dans le cloud), rien à coller : à chaque ouverture de session, le script
+`.claude/hooks/session-start.sh` fait l'installation (npm ci, navigateur de rendu, Playwright pour les images de style,
+`.env` vide, télémétrie coupée) et vérifie les garde-fous. Il ne fait rien sur ta machine. Deux réglages restent de ton
+côté : autoriser `cdn.jsdelivr.net` dans l'accès réseau de l'environnement (GSAP et les polices en viennent, sans lui le
+rendu échoue), et demander l'installation d'`openai-whisper` à l'étape de la voix (gros téléchargement).
+
 ---
 
 ## La méthode en 5 étapes
@@ -260,7 +266,8 @@ Le devis a ensuite été décliné en trois options sur la même voix, dans `exa
 - `LICENSE` : MIT.
 - `package.json` et `package-lock.json` : HyperFrames 0.8.82 figé.
 - `.env.example` : à copier en `.env` (vide, c'est voulu).
-- `.claude/settings.json` : télémétrie coupée.
+- `.claude/settings.json` : télémétrie coupée, et le script de démarrage des sessions web.
+- `.claude/hooks/session-start.sh` : l'installation et les vérifications à chaque session Claude Code sur le web.
 - `.claude/skills/motion-design/` : le skill de la méthode (`SKILL.md`, `references/` dont `voice-elevenlabs.md`, `music.md`, `pitfalls.md`, `variants.md` et `landing-integration.md`, `templates/` dont `frame.md`, `STORYBOARD.md`, `build-music-options.py` et `LaunchFilm.tsx`, `scripts/` dont `new-project.sh`, `mots.py`, `onsets.py`, `render-styleframes.py`, `analyze-music.py` et `check-frames.py`).
 - `.claude/skills/product-launch-video/` et 9 autres skills officiels HeyGen, audités et figés, avec leur licence.
 - `patterns/PATTERNS.md` : les patterns du motion design d'agence, les réglages retenus et la grille de contrôle.

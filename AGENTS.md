@@ -9,6 +9,10 @@ security audit (`.claude/skills/AUDITED_COMMIT.txt`, changes listed in `THIRD_PA
 `product-launch-video` (no URL capture preset, no HeyGen TTS or music API). The `hyperframes` router stays available
 for other kinds of video.
 
+**Cloud sessions** (Claude Code on the web): `.claude/hooks/session-start.sh` runs at every session start (npm ci,
+render browser, Python Playwright, empty `.env`, telemetry off, pinned versions and network checked) and prints a short
+summary. Act on its warnings; renders need `cdn.jsdelivr.net` allowed in the environment's network access.
+
 ## Guardrails (from the audit, non-negotiable)
 
 - Never run `npx hyperframes feedback` (ratings, comments, `--search-miss`), `publish`, `cloud`, `lambda`, `cloudrun`,
