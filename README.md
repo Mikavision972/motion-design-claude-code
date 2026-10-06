@@ -56,6 +56,13 @@ les garde-fous se chargent. Puis demande par exemple :
 
 > Je veux un motion design de lancement de 45 secondes pour mon produit. Voici ma page : https://...
 
+**Dans Claude Code sur le web** (session dans le cloud), rien à coller : à chaque ouverture de session, le script
+`.claude/hooks/session-start.sh` fait l'installation (npm ci, navigateur de rendu, Playwright pour les images de style,
+Whisper et ses modèles, `.env` vide, télémétrie coupée) et vérifie les garde-fous. Il ne fait rien sur ta machine. Un
+réglage reste de ton côté : autoriser `cdn.jsdelivr.net` (GSAP et les polices, sans lui le rendu échoue) et
+`openaipublic.azureedge.net` (les modèles de Whisper, sans lui pas de minutage des mots) dans l'accès réseau de
+l'environnement.
+
 ---
 
 ## La méthode en 5 étapes
@@ -216,7 +223,10 @@ plusieurs consignes envoyaient des données ou mettaient le logiciel à jour san
   à l'installation.
 - **`.env` vide à la racine** : un des skills HeyGen charge le premier fichier `.env` qu'il trouve en remontant les
   dossiers ; celui-ci arrête la recherche, aucune clé d'un dossier parent n'est lue.
-- **Commandes interdites** dans `AGENTS.md` (feedback, publish, cloud, upgrade, skills update…) sauf demande explicite.
+- **Commandes interdites** dans `AGENTS.md` (feedback, publish, cloud, upgrade, skills update…) sauf demande explicite,
+  et bloquées pour de bon : règles « deny » de `.claude/settings.json` et garde `.claude/hooks/guard.py`, qui refuse
+  aussi `npx skills`, `npx hyperframes@latest`, tout `pip install` autre qu'`openai-whisper` et `playwright`, et toute
+  clé HeyGen, ElevenLabs, Gemini ou OpenRouter écrite dans une commande ou un fichier.
 - **Aucune clé d'API nécessaire** : la voix se fait sur le site d'ElevenLabs, tout le reste tourne sur ta machine.
 
 ## Polices, musique, bruitages
@@ -260,7 +270,9 @@ Le devis a ensuite été décliné en trois options sur la même voix, dans `exa
 - `LICENSE` : MIT.
 - `package.json` et `package-lock.json` : HyperFrames 0.8.82 figé.
 - `.env.example` : à copier en `.env` (vide, c'est voulu).
-- `.claude/settings.json` : télémétrie coupée.
+- `.claude/settings.json` : télémétrie coupée, commandes interdites (« deny »), le garde et le script de démarrage.
+- `.claude/hooks/session-start.sh` : l'installation et les vérifications à chaque session Claude Code sur le web.
+- `.claude/hooks/guard.py` : le garde qui refuse les commandes interdites, les `pip install` hors liste et les clés d'API.
 - `.claude/skills/motion-design/` : le skill de la méthode (`SKILL.md`, `references/` dont `voice-elevenlabs.md`, `music.md`, `pitfalls.md`, `variants.md` et `landing-integration.md`, `templates/` dont `frame.md`, `STORYBOARD.md`, `build-music-options.py` et `LaunchFilm.tsx`, `scripts/` dont `new-project.sh`, `mots.py`, `onsets.py`, `render-styleframes.py`, `analyze-music.py` et `check-frames.py`).
 - `.claude/skills/product-launch-video/` et 9 autres skills officiels HeyGen, audités et figés, avec leur licence.
 - `patterns/PATTERNS.md` : les patterns du motion design d'agence, les réglages retenus et la grille de contrôle.

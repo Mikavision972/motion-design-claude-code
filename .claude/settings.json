@@ -5,5 +5,44 @@
     "HYPERFRAMES_SKIP_SKILLS": "1",
     "HYPERFRAMES_NO_UPDATE_CHECK": "1",
     "HYPERFRAMES_SKILL_PKG_VERSION": "0.8.82"
+  },
+  "permissions": {
+    "deny": [
+      "Bash(npx hyperframes@latest *)",
+      "Bash(npx skills *)",
+      "Bash(npx hyperframes skills *)",
+      "Bash(npx hyperframes feedback *)",
+      "Bash(npx hyperframes publish *)",
+      "Bash(npx hyperframes cloud *)",
+      "Bash(npx hyperframes lambda *)",
+      "Bash(npx hyperframes cloudrun *)",
+      "Bash(npx hyperframes auth *)",
+      "Bash(npx hyperframes upgrade *)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/session-start.sh",
+            "timeout": 900
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Write|Edit|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/guard.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
   }
 }
